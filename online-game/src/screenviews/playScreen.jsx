@@ -1,5 +1,5 @@
 function PlayScreen() {
-    (
+    return (
         <>
           <div id = "game-information">
             <p id = "round-numer"></p>
@@ -17,8 +17,10 @@ function PlayScreen() {
           <div id = "chat">
             <ul id = "chat-history"></ul>
           </div>
+
+          <p>Hello</p>
         </>
-    )
+    );
 }
 
 export default PlayScreen;
