@@ -1,0 +1,11 @@
+export const locationList = [{
+    x: 29,
+    y: 37,
+    imgsrc: "/locationimages/location1.png"
+},
+{
+    x: 196, 
+    y: 138,
+    imgsrc: "/locationimages/location2.png"
+}
+];

@@ -1,9 +1,11 @@
 import minimap from "../assets/sr-minimap.png"
+import {locationList} from "../location_info/locationList"
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 function PlayScreen() {
   const [circle, setCircle] = useState(null)
+  const [location, setLocation] = useState(null)
   const navigate = useNavigate();
 
   function goBack() {
@@ -19,9 +21,33 @@ function PlayScreen() {
 
     console.log("Relative Coords", {x, y});
 
+    calculateDistance({x,y})
+
     setCircle({x, y});
     
-    
+   function calculateDistance(userSpot) {
+
+    let actualX = 0;
+    let actualY = 0;
+
+    if (location) {
+      actualX = location.x;
+      actualY = location.y;
+    }
+
+    let euclideanDistance = (actualX - userSpot.x) ** 2 + (actualY - userSpot.y) ** 2;
+
+    console.log(`The euclidean distance is ${euclideanDistance}`)
+
+   } 
+  }
+
+  function randomLocation() {
+    const randomNumber = Math.floor(Math.random() * locationList.length);
+
+    setLocation(locationList[randomNumber]);
+
+  
   }
     return (
         <>
@@ -47,13 +73,16 @@ function PlayScreen() {
           height="100%">{circle && (<circle cx = {circle.x} cy = {circle.y} r = '5' fill = 'red'/>)}</svg>
           </div>
 
-          <div id = "randomLocation"></div>
+          <div id = "randomLocation">
+            {location && <img src = {location.imgsrc}/>}
+          </div>
 
           <div id = "chat">
             <ul id = "chat-history"></ul>
           </div>
 
           <button onClick={goBack}>Back</button>
+          <button onClick = {randomLocation}>Random Location</button>
         </>
     );
 }
