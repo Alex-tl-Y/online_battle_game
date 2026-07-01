@@ -1,0 +1,43 @@
+body {
+    display: flex
+}
+
+#homescreen {
+
+}
+
+#minimap {
+  position: relative;
+}
+
+#joinGameButton {
+  background-color: #53e237;
+  border-radius: 8px;
+  width: 100%;
+  height: 100%;
+  opacity: 0.5;
+}
+
+#randomLocation {
+  width: 100%;
+  height: 100%;
+  position: relative;
+
+}
+
+#randomLocationImg {
+  position: absolute;
+  top: 0px;
+  left: 200px;
+  width: 748px;
+  height:560px;
+}
+
+#bottom-half {
+  display: flex;
+
+}
+
+#test {
+  position: absolute;
+}

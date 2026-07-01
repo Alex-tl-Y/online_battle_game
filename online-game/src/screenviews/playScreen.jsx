@@ -6,14 +6,18 @@ import { useState } from "react";
 function PlayScreen() {
   const [circle, setCircle] = useState(null)
   const [location, setLocation] = useState(null)
+  const [score, setScore] = useState(0)
+  const [unusedLocations, setUnusedLocations] = useState(locationList)
+  const [round, setRound] = useState(5)
   const navigate = useNavigate();
 
   function goBack() {
     navigate("/");
   }
 
+  // Handles the clicks on the minimap
   function handleMinimapClick(e) {
-    let rect = e.currentTarget.getBoundingClientRect();
+    let rect = e.target.getBoundingClientRect();
 
     let x = e.clientX - rect.left;
     let y = e.clientY - rect.top;
@@ -25,6 +29,7 @@ function PlayScreen() {
 
     setCircle({x, y});
     
+   // Calculates the distance between the users input and the actual location
    function calculateDistance(userSpot) {
 
     let actualX = 0;
@@ -39,49 +44,59 @@ function PlayScreen() {
 
     console.log(`The euclidean distance is ${euclideanDistance}`)
 
+    setScore(Math.round(5000 * Math.pow(0.998, (euclideanDistance/200))));
+
    } 
   }
 
+  // Picks random image
   function randomLocation() {
-    const randomNumber = Math.floor(Math.random() * locationList.length);
+    const randomNumber = Math.floor(Math.random() * unusedLocations.length);
 
-    setLocation(locationList[randomNumber]);
+    setLocation(unusedLocations[randomNumber]);
+
+    //const remaining = 
 
   
   }
     return (
         <>
           <div id = "game-information">
-            <p id = "round-numer"></p>
+            <p id = "round-number">Round {round}</p>
             <p id = "timer-display"></p>
           </div>
 
-          <div id = "scoreboard">
-            <ul id = "scores"></ul>
-          </div>
+          <div id = "bottom-half">
+            <div id = "scoreboard">
+              <ul id = "scores"></ul>
+            </div>
 
-          <div id = "minimap">
-            <img src = {minimap} onClick={handleMinimapClick}/>
+            <div id = "minimap">
+              <img src = {minimap} onClick={handleMinimapClick}/>
+              
+              <svg style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              pointerEvents: "none",
+            }}
+            width="100%"
+            height="100%">{circle && (<circle cx = {circle.x} cy = {circle.y} r = '5' fill = 'red'/>)}</svg>
+            </div>
+
+            <div id = "randomLocation">
+              {location && <img  id = "randomLocationImg" src = {location.imgsrc}/>}
+              {score && <p>Score: {score}</p>}
+            </div>
+
+            <div id = "chat">
+              <ul id = "chat-history"></ul>
+            </div>
+
             
-            <svg style={{
-            position: "absolute",
-            top: 18,
-            left: 10,
-            pointerEvents: "none",
-          }}
-          width="100%"
-          height="100%">{circle && (<circle cx = {circle.x} cy = {circle.y} r = '5' fill = 'red'/>)}</svg>
           </div>
-
-          <div id = "randomLocation">
-            {location && <img src = {location.imgsrc}/>}
-          </div>
-
-          <div id = "chat">
-            <ul id = "chat-history"></ul>
-          </div>
-
           <button onClick={goBack}>Back</button>
+          <p id = "test"></p>
           <button onClick = {randomLocation}>Random Location</button>
         </>
     );
