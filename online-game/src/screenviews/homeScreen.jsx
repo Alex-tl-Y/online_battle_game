@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { socket } from "../socket.js"
 
 function HomeScreen() {
     const navigate = useNavigate();
@@ -9,6 +10,7 @@ function HomeScreen() {
 
     function createGame() {
       navigate("/play");
+      socket.emit("create-game");
     }
     return (
       <>
