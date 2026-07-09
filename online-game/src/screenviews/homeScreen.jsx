@@ -15,14 +15,16 @@ function HomeScreen() {
     }
     return (
       <>
-        <div id = "homescreen">
-          <form id = "userHomeInput">
-            <input id = "username" placeholder = "Enter username" class = "userInput"/>
-            <input id = "joinGame" placeholder = "Enter game code" class = "userInput"/>
+        <div id = "homepage">
+          <div id = "homescreen">
+            <form id = "userHomeInput">
+              <input id = "username" placeholder = "Enter username" class = "userInput"/>
+              <input id = "joinGame" placeholder = "Enter game code" class = "userInput"/>
 
-            <button id = "joinGameButton" onClick={joinGame}>Join Game</button>
-            <button id = "createGame" onClick={createGame}>Create Game</button>
-          </form>
+              <button id = "joinGameButton" onClick={joinGame}>Join Game</button>
+              <button id = "createGame" onClick={createGame}>Create Game</button>
+            </form>
+          </div>
         </div>
       </>
     );

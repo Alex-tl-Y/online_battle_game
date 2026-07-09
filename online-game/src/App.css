@@ -2,6 +2,11 @@
   }
 
   #root {
+
+  }
+
+  /* Homescreen CSS */
+  #homepage {
     height: 100vh;
     margin: 0;
     display: flex;
@@ -9,7 +14,6 @@
     align-items: center;
   }
 
-  /* Homescreen CSS */
   #homescreen {
     margin: 0 auto;
     background-color: lightblue;
@@ -50,28 +54,72 @@
 }
 /* Playscreen CSS */
 
-#minimap {
-  position: relative;
+#playscreen {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
-
-#randomLocation {
-  width: 100%;
-  height: 100%;
-  position: relative;
-
-}
-
-#randomLocationImg {
-  position: absolute;
-  top: 0px;
-  left: 200px;
-  width: 748px;
-  height:560px;
+#game-information {
+  display: flex;
+  height: 50px;
+  width: 1600px;
+  background-color: lightblue;
+  margin-bottom: 100px;
+  align-self: center;
 }
 
 #bottom-half {
   display: flex;
+  flex-direction: row;
+}
 
+#scoreboard {
+  padding-left: 30px;
+  padding-right: 200px;
+}
+#minimap {
+  position: relative;
+  padding-right: 200px;
+}
+
+#randomLocation {
+  width: 748px;
+  height: 560px;
+  position: relative;
+  border: 4px solid lightgray;
+  border-radius: 4px;
+}
+
+#randomLocationImg {
+  position: absolute;
+
+  width: 748px;
+  height:560px;
+
+}
+
+#score {
+  padding-left: 100px;
+  font-size: 32px;
+}
+#bottom-half {
+  display: flex;
+
+}
+
+#playButton {
+  display: flex;
+  flex-direction: horizontal;
+  align-items: center;
+}
+#backButton {
+  margin-top: 10px;
+  margin-left: 750px;
+}
+
+#randomLocationButton {
+  margin-left: 10px;
+  margin-top: 10px;
 }
 
 #test {

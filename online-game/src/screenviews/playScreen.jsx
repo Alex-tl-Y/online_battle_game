@@ -76,43 +76,50 @@ function PlayScreen() {
   }
     return (
         <>
-          <div id = "game-information">
-            <p id = "round-number">Round {round}</p>
-            <p id = "timer-display"></p>
-          </div>
-
-          <div id = "bottom-half">
-            <div id = "scoreboard">
-              {playerList && <Scoreboard players = {playerList}/>}
+          <div id = "playscreen">
+            <div id = "game-information">
+              <p id = "round-number">Round {round}</p>
+              <p id = "timer-display"></p>
             </div>
 
-            <div id = "minimap">
-              <img src = {minimap} onClick={handleMinimapClick}/>
+            <div id = "bottom-half">
+              <div id = "scoreboard">
+                {playerList && <Scoreboard players = {playerList}/>}
+              </div>
+
+              <div id = "minimap">
+                <img src = {minimap} onClick={handleMinimapClick}/>
+                
+                <svg style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                pointerEvents: "none",
+              }}
+              width="100%"
+              height="100%">{circle && (<circle cx = {circle.x} cy = {circle.y} r = '5' fill = 'red'/>)}</svg>
+              </div>
+
+              <div id = "randomLocation">
+                {location && <img  id = "randomLocationImg" src = {location.imgsrc}/>}
+              </div>
               
-              <svg style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              pointerEvents: "none",
-            }}
-            width="100%"
-            height="100%">{circle && (<circle cx = {circle.x} cy = {circle.y} r = '5' fill = 'red'/>)}</svg>
-            </div>
+              <div id = "score">
+                {score && <p>Score: {score}</p>}
+              </div>
 
-            <div id = "randomLocation">
-              {location && <img  id = "randomLocationImg" src = {location.imgsrc}/>}
-              {score && <p>Score: {score}</p>}
-            </div>
+              <div id = "chat">
+                <ul id = "chat-history"></ul>
+              </div>
 
-            <div id = "chat">
-              <ul id = "chat-history"></ul>
+              
             </div>
-
-            
           </div>
-          <button onClick={goBack}>Back</button>
-          <p id = "test"></p>
-          <button onClick = {randomLocation}>Random Location</button>
+          <div id = "playButton">
+            <button id = "backButton" onClick={goBack}>Back</button>
+            <p id = "test"></p>
+            <button id = "randomLocationButton" onClick = {randomLocation}>Random Location</button>
+          </div>
         </>
     );
 }
