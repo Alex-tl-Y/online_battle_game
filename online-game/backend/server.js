@@ -12,16 +12,24 @@ const io = new Server(server, {
     }
 });
 
+let allUsers = [];
+
 io.on("connection", (socket) => {
-    console.log("Player connected", socket.id)
+    console.log("Player connected", socket.id);
+
+    socket.on("scoreboard", () => {
+        allUsers.push(socket.id);
+        io.emit("scoreboard", allUsers);
+        console.log("hi")
+    });
 
     socket.on("disconnect", () => {
         console.log("Player disconnected")
-    })
+    });
 
     socket.on("create-game", () => {
         console.log("Game created")
-    })
+    });
 })
 
 server.listen(3001, () => {

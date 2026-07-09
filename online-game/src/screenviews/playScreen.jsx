@@ -1,7 +1,9 @@
 import minimap from "../assets/sr-minimap.png"
 import {locationList} from "../location_info/locationList"
+import Scoreboard from "../components/scoreboard"
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { socket } from "../socket";
 
 function PlayScreen() {
   const [circle, setCircle] = useState(null)
@@ -9,7 +11,20 @@ function PlayScreen() {
   const [score, setScore] = useState(0)
   const [unusedLocations, setUnusedLocations] = useState(locationList)
   const [round, setRound] = useState(5)
+  const [playerList, setPlayerList] = useState([])
   const navigate = useNavigate();
+
+
+  useEffect(() => {
+   
+    socket.on("scoreboard", (allUsers) => {
+      setPlayerList(allUsers);
+      console.log("Hi");
+        
+    })
+    
+    
+  }, [])
 
   function goBack() {
     navigate("/");
@@ -68,7 +83,7 @@ function PlayScreen() {
 
           <div id = "bottom-half">
             <div id = "scoreboard">
-              <ul id = "scores"></ul>
+              {playerList && <Scoreboard players = {playerList}/>}
             </div>
 
             <div id = "minimap">
