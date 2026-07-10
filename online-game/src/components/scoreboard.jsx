@@ -4,7 +4,7 @@ function Scoreboard({ players }) {
           {players.map(player => (
             <div>{player}</div>
           ))}
-          <p>Hi</p>
+          <p>Scoreboard</p>
         </>
     )
 }

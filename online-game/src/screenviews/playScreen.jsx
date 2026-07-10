@@ -10,8 +10,9 @@ function PlayScreen() {
   const [location, setLocation] = useState(null)
   const [score, setScore] = useState(0)
   const [unusedLocations, setUnusedLocations] = useState(locationList)
-  const [round, setRound] = useState(5)
+  const [round, setRound] = useState(1)
   const [playerList, setPlayerList] = useState([])
+  const [minimapPos, setMinimapPos] = useState({x: 0, y: 0, zoom: 1})
   const navigate = useNavigate();
 
 
@@ -37,16 +38,19 @@ function PlayScreen() {
     let x = e.clientX - rect.left;
     let y = e.clientY - rect.top;
 
+    let imageX = (x - minimapPos.x) / minimapPos.zoom;
+    let imageY = (y - minimapPos.y) / minimapPos.zoom;
 
-    console.log("Relative Coords", {x, y});
+    console.log("Relative Coords", {imageX, imageY});
 
-    calculateDistance({x,y})
+    
 
-    setCircle({x, y});
+    setCircle({x: imageX, y: imageY});
+  }
     
    // Calculates the distance between the users input and the actual location
-   function calculateDistance(userSpot) {
-
+   function calculateDistance() {
+    
     let actualX = 0;
     let actualY = 0;
 
@@ -55,13 +59,12 @@ function PlayScreen() {
       actualY = location.y;
     }
 
-    let euclideanDistance = (actualX - userSpot.x) ** 2 + (actualY - userSpot.y) ** 2;
+    let euclideanDistance = (actualX - circle.x) ** 2 + (actualY - circle.y) ** 2;
 
     console.log(`The euclidean distance is ${euclideanDistance}`)
 
     setScore(Math.round(5000 * Math.pow(0.998, (euclideanDistance/200))));
 
-   } 
   }
 
   // Picks random image
@@ -73,6 +76,27 @@ function PlayScreen() {
     //const remaining = 
 
   
+  }
+
+  function zoomFeature(e) {
+
+      let rect = e.target.getBoundingClientRect();
+
+      const cursorX = e.clientX - rect.left;
+      const cursorY = e.clientY - rect.top;
+
+      const imageX = (cursorX - minimapPos.x) / minimapPos.zoom;
+      const imageY = (cursorY - minimapPos.y) / minimapPos.zoom;
+
+      const deltaZoom = e.deltaY * -0.001;
+      const newZoom = minimapPos.zoom + deltaZoom;
+      const ratio = 1 - newZoom / minimapPos.zoom;
+      
+      if (newZoom >= 1 && newZoom <= 5) {
+        setMinimapPos({x: cursorX - imageX * newZoom, y: cursorY - imageY * newZoom, zoom: newZoom});
+      }
+      
+    
   }
     return (
         <>
@@ -88,16 +112,21 @@ function PlayScreen() {
               </div>
 
               <div id = "minimap">
-                <img src = {minimap} onClick={handleMinimapClick}/>
+                <div id = "minimapview" onWheel={zoomFeature}
+                style = {{
+                  transformOrigin: "0 0",
+                  transform: `translate(${minimapPos.x}px, ${minimapPos.y}px) scale(${minimapPos.zoom})`,
+                  }}>
+                  <img id = "minimapimg" src = {minimap} onClick={handleMinimapClick} />
                 
-                <svg style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                pointerEvents: "none",
-              }}
-              width="100%"
-              height="100%">{circle && (<circle cx = {circle.x} cy = {circle.y} r = '5' fill = 'red'/>)}</svg>
+                  <svg style={{
+                  position: "absolute",
+                  inset: "0",
+                  pointerEvents: "none",
+                }}
+                width="100%"
+                height="100%">{circle && (<circle cx = {circle.x} cy = {circle.y} r = '5' fill = 'red'/>)}</svg>      
+                </div>
               </div>
 
               <div id = "randomLocation">
@@ -117,8 +146,9 @@ function PlayScreen() {
           </div>
           <div id = "playButton">
             <button id = "backButton" onClick={goBack}>Back</button>
-            <p id = "test"></p>
+            <p id = "test">{minimapPos.zoom}</p>
             <button id = "randomLocationButton" onClick = {randomLocation}>Random Location</button>
+            <button id = "guess" onClick = {calculateDistance}>Guess</button>
           </div>
         </>
     );
