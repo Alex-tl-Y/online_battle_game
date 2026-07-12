@@ -58,6 +58,13 @@ io.on("connection", (socket) => {
 
     socket.on("disconnect", () => {
         console.log("Player disconnected")
+
+        allUsers.forEach((user) => {
+          if (socket.id == user.id) {
+              allUsers = allUsers.filter(element => element !== user);
+          }
+          io.emit("set-scoreboard", allUsers);
+      })
     });
 
     socket.on("create-game", (username) => {
