@@ -89,8 +89,7 @@
 
 #minimapview {
   position: absolute;
-  top: 0;
-  left: 0;
+  inset: 0;
   border: 2px solid
 }
 #minimapimg {

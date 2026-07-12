@@ -17,8 +17,9 @@ function PlayScreen() {
 
 
   useEffect(() => {
-   
-    socket.on("scoreboard", (allUsers) => {
+    socket.emit("scoreboard");
+    
+    socket.on("set-scoreboard", (allUsers) => {
       setPlayerList(allUsers);
       console.log("Hi");
         
@@ -78,9 +79,10 @@ function PlayScreen() {
   
   }
 
+  // Zoom in feature on the minimap
   function zoomFeature(e) {
 
-      let rect = e.target.getBoundingClientRect();
+      let rect = e.currentTarget.getBoundingClientRect();
 
       const cursorX = e.clientX - rect.left;
       const cursorY = e.clientY - rect.top;
@@ -93,7 +95,16 @@ function PlayScreen() {
       const ratio = 1 - newZoom / minimapPos.zoom;
       
       if (newZoom >= 1 && newZoom <= 5) {
-        setMinimapPos({x: cursorX - imageX * newZoom, y: cursorY - imageY * newZoom, zoom: newZoom});
+        setMinimapPos(prev => {
+          const imageX = (cursorX - prev.x)/prev.zoom;
+          const imageY = (cursorY - prev.y)/prev.zoom;
+
+          return {
+            x: cursorX - imageX * newZoom,
+            y: cursorY - imageY * newZoom,
+            zoom: newZoom,
+          };
+        });
       }
       
     

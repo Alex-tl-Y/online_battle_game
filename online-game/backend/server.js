@@ -2,6 +2,40 @@ import express from 'express';
 import { Server } from 'socket.io';
 import http from "http";
 
+class User {
+    score = 0;
+    position = 0;
+    score_from_round = 0;
+
+    constructor(name, id, isHost = false) {
+        this.name = name;
+        this.id = id;
+    }
+
+    getName () {
+        return this.name;
+    }
+
+    getID() {
+        return this.id;
+    }
+
+    getScore() {
+        return this.score;
+    }
+
+    getIsHost() {
+        return this.isHost;
+    }
+
+    getPosition() {
+        return this.position;
+    }
+
+    getScoreFromRound() {
+        return this.score_from_round;
+    }
+}
 const app = express();
 const server = http.createServer(app);
 
@@ -18,17 +52,18 @@ io.on("connection", (socket) => {
     console.log("Player connected", socket.id);
 
     socket.on("scoreboard", () => {
-        allUsers.push(socket.id);
-        io.emit("scoreboard", allUsers);
-        console.log("hi")
+        io.emit("set-scoreboard", allUsers);
+        console.log("Hi");
     });
 
     socket.on("disconnect", () => {
         console.log("Player disconnected")
     });
 
-    socket.on("create-game", () => {
-        console.log("Game created")
+    socket.on("create-game", (username) => {
+        console.log("Game created");
+        let user = new User(username, socket.id, true);
+        allUsers.push(user);
     });
 })
 

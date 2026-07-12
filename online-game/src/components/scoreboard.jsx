@@ -1,10 +1,10 @@
 function Scoreboard({ players }) {
     return (
         <>
-          {players.map(player => (
-            <div>{player}</div>
-          ))}
           <p>Scoreboard</p>
+          {players.map(player => (
+            <div className = "scoreboard">{player.name}, {player.score}</div>
+          ))}
         </>
     )
 }
