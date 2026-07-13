@@ -28,6 +28,13 @@ function PlayScreen() {
     
   }, [])
 
+  useEffect(() => {
+    socket.on("display-location", (currentLocation) => {
+      setLocation(currentLocation);
+      console.log("new location")
+    })
+  }, [])
+
   function goBack() {
     navigate("/");
   }
@@ -52,31 +59,28 @@ function PlayScreen() {
    // Calculates the distance between the users input and the actual location
    function calculateDistance() {
     
-    let actualX = 0;
-    let actualY = 0;
+    socket.emit("calculate-distance", circle);
+    
+    // let actualX = 0;
+    // let actualY = 0;
 
-    if (location) {
-      actualX = location.x;
-      actualY = location.y;
-    }
+    // if (location) {
+    //   actualX = location.x;
+    //   actualY = location.y;
+    // }
 
-    let euclideanDistance = (actualX - circle.x) ** 2 + (actualY - circle.y) ** 2;
+    // let euclideanDistance = (actualX - circle.x) ** 2 + (actualY - circle.y) ** 2;
 
-    console.log(`The euclidean distance is ${euclideanDistance}`)
+    // console.log(`The euclidean distance is ${euclideanDistance}`)
 
-    setScore(Math.round(5000 * Math.pow(0.998, (euclideanDistance/200))));
+    // setScore(Math.round(5000 * Math.pow(0.998, (euclideanDistance/200))));
 
   }
 
   // Picks random image
   function randomLocation() {
-    const randomNumber = Math.floor(Math.random() * unusedLocations.length);
-
-    setLocation(unusedLocations[randomNumber]);
-
-    //const remaining = 
-
-  
+    socket.emit("random-location");
+      
   }
 
   // Zoom in feature on the minimap
