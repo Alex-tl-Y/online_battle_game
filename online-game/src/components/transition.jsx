@@ -1,0 +1,7 @@
+function transitionPage({playerStats}) {
+    return (
+        <>
+        
+        </>
+    )
+}

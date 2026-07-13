@@ -10,7 +10,8 @@ function PlayScreen() {
   const [location, setLocation] = useState(null)
   const [score, setScore] = useState(0)
   const [unusedLocations, setUnusedLocations] = useState(locationList)
-  const [round, setRound] = useState(1)
+  const [round, setRound] = useState(null)
+  const [timer, setTimer] = useState(null)
   const [playerList, setPlayerList] = useState([])
   const [minimapPos, setMinimapPos] = useState({x: 0, y: 0, zoom: 1})
   const navigate = useNavigate();
@@ -35,6 +36,23 @@ function PlayScreen() {
     })
   }, [])
 
+  useEffect(() => {
+    socket.on("round-number", (roundNumber) => {
+      setRound(roundNumber);
+    })
+  }, [])
+
+  useEffect(() => {
+    socket.on("timer-information", (sec) => {
+      setTimer(sec);
+    })
+  }, [])
+
+  useEffect(() => {
+    socket.on("next-round", () => {
+      socket.emit("random-location");
+    })
+  })
   function goBack() {
     navigate("/");
   }
@@ -118,7 +136,7 @@ function PlayScreen() {
           <div id = "playscreen">
             <div id = "game-information">
               <p id = "round-number">Round {round}</p>
-              <p id = "timer-display"></p>
+              <p id = "timer-display">{timer}</p>
             </div>
 
             <div id = "bottom-half">

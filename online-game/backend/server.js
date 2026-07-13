@@ -49,15 +49,18 @@ const io = new Server(server, {
 });
 
 let allUsers = [];
+let userGuessed = [];
 let unusedLocations = [...locationList];
 let currentLocation = unusedLocations[0];
+let round = 1;
+let roundInMotion = false;
 
 io.on("connection", (socket) => {
     console.log("Player connected", socket.id);
 
     socket.on("scoreboard", () => {
         io.emit("set-scoreboard", allUsers);
-        console.log("Hi");
+        
     });
 
     socket.on("disconnect", () => {
@@ -78,11 +81,33 @@ io.on("connection", (socket) => {
     });
 
     socket.on("random-location", () => {
-      const randomNumber = Math.floor(Math.random() * unusedLocations.length);
+      
+      if (round > 3) {
+        io.emit("end-game");
+        round = 1;
+      }
+      else if (!roundInMotion) {
+        roundInMotion = true;
+        const randomNumber = Math.floor(Math.random() * unusedLocations.length);
+        let sec = 30;
 
-      currentLocation = unusedLocations[randomNumber];
+        currentLocation = unusedLocations[randomNumber];
 
-      io.emit("display-location", currentLocation);
+        io.emit("display-location", currentLocation);
+        io.emit("round-number", round);
+
+        let timer = setInterval(() => {
+          io.emit("timer-information", sec);
+          sec--;
+          if (sec < 0 || userGuessed.length == allUsers.length) {
+            clearInterval(timer);
+            round ++;
+            sec = 30;
+            io.emit("next-round");
+            roundInMotion = false;
+          }
+        }, 1000)
+      }
 
       
     });
