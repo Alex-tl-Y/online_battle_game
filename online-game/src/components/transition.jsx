@@ -1,7 +1,9 @@
-function transitionPage({playerStats}) {
+function TransitionPage({playerStats}) {
     return (
         <>
-        
+          
         </>
     )
 }
+
+export default TransitionPage;
