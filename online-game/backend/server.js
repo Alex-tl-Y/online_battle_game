@@ -53,16 +53,17 @@ let userGuessed = [];
 let unusedLocations = [...locationList];
 let currentLocation = unusedLocations[0];
 let round = 1;
-let roundInMotion = false;
 
 io.on("connection", (socket) => {
     console.log("Player connected", socket.id);
 
+    // Handles updating the scoreboard
     socket.on("scoreboard", () => {
         io.emit("set-scoreboard", allUsers);
         
     });
 
+    // Handles disconnect cases
     socket.on("disconnect", () => {
         console.log("Player disconnected")
 
@@ -74,44 +75,19 @@ io.on("connection", (socket) => {
       })
     });
 
+    // Creates a game (lobby)
     socket.on("create-game", (username) => {
         console.log("Game created");
         let user = new User(username, socket.id, true);
         allUsers.push(user);
     });
 
-    socket.on("random-location", () => {
-      
-      if (round > 3) {
-        io.emit("end-game");
-        round = 1;
-      }
-      else if (!roundInMotion) {
-        roundInMotion = true;
-        const randomNumber = Math.floor(Math.random() * unusedLocations.length);
-        let sec = 30;
-
-        currentLocation = unusedLocations[randomNumber];
-
-        io.emit("display-location", currentLocation);
-        io.emit("round-number", round);
-
-        let timer = setInterval(() => {
-          io.emit("timer-information", sec);
-          sec--;
-          if (sec < 0 || userGuessed.length == allUsers.length) {
-            clearInterval(timer);
-            round ++;
-            sec = 30;
-            io.emit("next-round");
-            roundInMotion = false;
-          }
-        }, 1000)
-      }
-
-      
+    // Main logic of the game rounds here.
+    socket.on("start-game", () => {
+      startGame();      
     });
 
+    // Handles distance calculation and the respective score.
     socket.on("calculate-distance", (circle) => {
       const euclideanDistance = (currentLocation.x - circle.x) ** 2 + (currentLocation.y - circle.y) ** 2;
 
@@ -124,6 +100,61 @@ io.on("connection", (socket) => {
 
     })
 })
+
+function startGame() {
+  round = 1;
+  roundStart();
+}
+
+function roundTransition() {
+  let sec = 7;
+
+  io.emit("round-transition");
+
+  let timer = setInterval(() => {
+    sec--;
+    if (sec < 0) {
+      clearInterval(timer);
+      sec = 7;
+      if (round > 3) {
+        io.emit("game-over");
+      }
+      else {
+        roundStart();
+        
+      }
+    }
+  }, 1000)
+}
+
+function roundStart() {
+  const randomNumber = Math.floor(Math.random() * unusedLocations.length);
+  let sec = 5;
+
+  currentLocation = unusedLocations[randomNumber];
+
+  io.emit("display-location", currentLocation);
+  io.emit("round-number", round);
+
+  let timer = setInterval(() => {
+    io.emit("timer-information", sec);
+    sec--;
+    if (sec < 0 || userGuessed.length == allUsers.length) {
+      clearInterval(timer);
+      round ++;
+      sec = 5;
+      roundTransition();
+    }
+  }, 1000)
+}
+
+function sortScore(userList) {
+  userList.sort((a,b) => a.score - b.score);
+}
+
+function sortScoreFromRound(userList) {
+  userList.sort((a,b) => a.score_from_round - b.score_from_round);
+}
 
 server.listen(3001, () => {
     console.log("Server is running");

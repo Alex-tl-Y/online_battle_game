@@ -17,6 +17,7 @@ function PlayScreen() {
   const navigate = useNavigate();
 
 
+  // Listens for updates to the scoreboard.
   useEffect(() => {
     socket.emit("scoreboard");
     
@@ -29,6 +30,7 @@ function PlayScreen() {
     
   }, [])
 
+  // Listens for updates on the location the user has to guess.
   useEffect(() => {
     socket.on("display-location", (currentLocation) => {
       setLocation(currentLocation);
@@ -36,23 +38,33 @@ function PlayScreen() {
     })
   }, [])
 
+  // Listens for updates to the round number.
   useEffect(() => {
     socket.on("round-number", (roundNumber) => {
       setRound(roundNumber);
     })
   }, [])
 
+  // Listens to updates to the timer counting down.
   useEffect(() => {
     socket.on("timer-information", (sec) => {
       setTimer(sec);
     })
   }, [])
 
+  // Listens to updates of when the next round should start
   useEffect(() => {
     socket.on("next-round", () => {
-      socket.emit("random-location");
+      socket.emit("game-rounds");
     })
-  })
+  }, [])
+
+  // Listens to updates of when to transition in between rounds.
+  useEffect(() => {
+    socket.on("round-transition", () => {
+      
+    })
+  }, [])
   function goBack() {
     navigate("/");
   }
@@ -97,7 +109,7 @@ function PlayScreen() {
 
   // Picks random image
   function randomLocation() {
-    socket.emit("random-location");
+    socket.emit("start-game");
       
   }
 
