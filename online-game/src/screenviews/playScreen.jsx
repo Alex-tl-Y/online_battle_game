@@ -9,11 +9,13 @@ import { socket } from "../socket";
 
 function PlayScreen() {
   const [circle, setCircle] = useState(null)
+  const [actualCoords, setActualCoords] = useState(null)
   const [location, setLocation] = useState(null)
   const [score, setScore] = useState(0)
   const [unusedLocations, setUnusedLocations] = useState(locationList)
   const [round, setRound] = useState(null)
   const [timer, setTimer] = useState(null)
+  const [roomCode, setRoomCode] = useState(null);
   const [playerList, setPlayerList] = useState([])
   const [roundInformation, setRoundInformation] = useState([])
   const [gameOverInfo, setGameOverInfo] = useState([])
@@ -24,6 +26,8 @@ function PlayScreen() {
   // Listens for updates to the scoreboard.
   useEffect(() => {
     socket.emit("scoreboard");
+    socket.emit("roomcode");
+    
     
     socket.on("set-scoreboard", (allUsers) => {
       setPlayerList(allUsers);
@@ -31,13 +35,20 @@ function PlayScreen() {
         
     })
     
-    
+  }, [])
+
+  useEffect(() => {
+    socket.on("set-roomcode", (roomcode) => {
+      setRoomCode(roomcode);
+
+    })
   }, [])
 
   // Listens for updates on the location the user has to guess.
   useEffect(() => {
     socket.on("display-location", (currentLocation) => {
       setRoundInformation([]);
+      setActualCoords(null);
       setLocation(currentLocation);
       console.log("new location")
     })
@@ -66,8 +77,9 @@ function PlayScreen() {
 
   // Listens to updates of when to transition in between rounds.
   useEffect(() => {
-    socket.on("round-transition", (scoreFromRoundList) => {
+    socket.on("round-transition", (scoreFromRoundList, locationCoords) => {
       setRoundInformation(scoreFromRoundList);
+      setActualCoords(locationCoords);
     })
   }, [])
 
@@ -161,6 +173,7 @@ function PlayScreen() {
             <div id = "game-information">
               <p id = "round-number">Round {round}</p>
               <p id = "timer-display">{timer}</p>
+              <p id = "room-code">{roomCode}</p>
             </div>
 
             <div id = "bottom-half">
@@ -182,7 +195,15 @@ function PlayScreen() {
                   pointerEvents: "none",
                 }}
                 width="100%"
-                height="100%">{circle && (<circle cx = {circle.x} cy = {circle.y} r = '5' fill = 'red'/>)}</svg>      
+                height="100%">{circle && (<circle cx = {circle.x} cy = {circle.y} r = '5' fill = 'red'/>)}</svg> 
+
+                <svg style={{
+                  position: "absolute",
+                  inset: "0",
+                  pointerEvents: "none",
+                }}
+                width="100%"
+                height="100%">{actualCoords && (<circle cx = {actualCoords.x} cy = {actualCoords.y} r = '5' fill = 'blue'/>)}</svg>       
                 </div>
               </div>
 

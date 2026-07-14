@@ -1,15 +1,33 @@
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { socket } from "../socket"
 
 function HomeScreen() {
     const [username, setUsername] = useState('')
     const [roomCode, setRoomCode] = useState('')
+    const [invalidCode, setInvalidCode] = useState('')
     const navigate = useNavigate();
+
+    useEffect(() => {
+      socket.on("invalid-roomcode", () => {
+        setInvalidCode("Invalid Code");
+      })
+    },[])
+
+    useEffect(() => {
+      socket.on("valid-roomcode", () => {
+        navigate("/play");
+      })
+    },[])
 
     function joinGame(e) {
       e.preventDefault();
       console.log("joining");
+      
+      if (username != "" && roomCode != "") {
+        socket.emit("join-game", username, roomCode);
+      }
+
     }
 
     function createGame(e) {
@@ -28,11 +46,12 @@ function HomeScreen() {
           <div id = "homescreen">
             <form id = "userHomeInput">
               <input id = "username" placeholder = "Enter username" className = "userInput" onChange = {(e) => setUsername(e.target.value)} value = {username}/>
-              <input id = "joinGame" placeholder = "Enter game code" className = "userInput"/>
+              <input id = "joinGame" placeholder = "Enter game code" className = "userInput" onChange = {(e) => setRoomCode(e.target.value)} value = {roomCode}/>
 
               <button id = "joinGameButton" onClick={joinGame}>Join Game</button>
               <button id = "createGame" onClick={createGame}>Create Game</button>
             </form>
+            <p>{invalidCode}</p>
           </div>
         </div>
       </>
