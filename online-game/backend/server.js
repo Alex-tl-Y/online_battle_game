@@ -117,7 +117,7 @@ function roundTransition() {
     sec--;
     if (sec < 0) {
       clearInterval(timer);
-      sec = 7;
+      sec = 4;
       if (round > 3) {
         let gameOverInformation = [...allUsers];
         sortScore(gameOverInformation);

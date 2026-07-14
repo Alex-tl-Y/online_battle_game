@@ -2,6 +2,7 @@ import minimap from "../assets/sr-minimap.png"
 import {locationList} from "../location_info/locationList"
 import Scoreboard from "../components/scoreboard"
 import TransitionPage from "../components/transition";
+import GameOver from "../components/gameover";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { socket } from "../socket";
