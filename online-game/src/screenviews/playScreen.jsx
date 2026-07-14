@@ -1,6 +1,7 @@
 import minimap from "../assets/sr-minimap.png"
 import {locationList} from "../location_info/locationList"
 import Scoreboard from "../components/scoreboard"
+import TransitionPage from "../components/transition";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { socket } from "../socket";
@@ -13,6 +14,8 @@ function PlayScreen() {
   const [round, setRound] = useState(null)
   const [timer, setTimer] = useState(null)
   const [playerList, setPlayerList] = useState([])
+  const [roundInformation, setRoundInformation] = useState([])
+  const [gameOverInfo, setGameOverInfo] = useState([])
   const [minimapPos, setMinimapPos] = useState({x: 0, y: 0, zoom: 1})
   const navigate = useNavigate();
 
@@ -33,6 +36,7 @@ function PlayScreen() {
   // Listens for updates on the location the user has to guess.
   useEffect(() => {
     socket.on("display-location", (currentLocation) => {
+      setRoundInformation([]);
       setLocation(currentLocation);
       console.log("new location")
     })
@@ -61,10 +65,17 @@ function PlayScreen() {
 
   // Listens to updates of when to transition in between rounds.
   useEffect(() => {
-    socket.on("round-transition", () => {
-      
+    socket.on("round-transition", (scoreFromRoundList) => {
+      setRoundInformation(scoreFromRoundList);
     })
   }, [])
+
+    useEffect(() => {
+    socket.on("game-over", (gameOverScoreList) => {
+      setGameOverInfo(gameOverScoreList);
+    })
+  }, [])
+
   function goBack() {
     navigate("/");
   }
@@ -181,11 +192,14 @@ function PlayScreen() {
               <div id = "score">
                 {score && <p>Score: {score}</p>}
               </div>
-
-              <div id = "chat">
-                <ul id = "chat-history"></ul>
+              
+              <div id = "transition-overlay">
+                {(roundInformation.length > 0) && <TransitionPage scoreFromRoundList = {roundInformation}/>}
               </div>
-
+              
+              <div id = "gameover-overlay">
+                {(gameOverInfo.length > 0) && <GameOver finalStats = {gameOverInfo}/>}
+              </div>
               
             </div>
           </div>

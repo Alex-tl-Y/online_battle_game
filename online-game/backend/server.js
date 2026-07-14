@@ -109,7 +109,9 @@ function startGame() {
 function roundTransition() {
   let sec = 7;
 
-  io.emit("round-transition");
+  let roundInformation = [...allUsers];
+  sortScoreFromRound(roundInformation);
+  io.emit("round-transition", roundInformation);
 
   let timer = setInterval(() => {
     sec--;
@@ -117,7 +119,9 @@ function roundTransition() {
       clearInterval(timer);
       sec = 7;
       if (round > 3) {
-        io.emit("game-over");
+        let gameOverInformation = [...allUsers];
+        sortScore(gameOverInformation);
+        io.emit("game-over", gameOverInformation);
       }
       else {
         roundStart();
@@ -154,6 +158,7 @@ function sortScore(userList) {
 
 function sortScoreFromRound(userList) {
   userList.sort((a,b) => a.score_from_round - b.score_from_round);
+  
 }
 
 server.listen(3001, () => {
