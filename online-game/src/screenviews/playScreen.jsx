@@ -111,10 +111,17 @@ function PlayScreen() {
     })
   })
 
-    useEffect(() => {
+  useEffect(() => {
     socket.on("game-over", (gameOverScoreList) => {
       setGameOverInfo(gameOverScoreList);
       setRoundInformation([]);
+    })
+  }, [])
+
+  useEffect(() => {
+    socket.on("disable-gameover-overlay", () => {
+      setGameOverInfo([]);
+     
     })
   }, [])
 
@@ -248,8 +255,8 @@ function PlayScreen() {
                 {(roundInformation.length > 0) && <TransitionPage scoreFromRoundList = {roundInformation}/>}
               </div>
               
-              <div id = "gameover-overlay">
-                {(gameOverInfo.length > 0) && <GameOver finalStats = {gameOverInfo}/>}
+              <div>
+                {(gameOverInfo.length > 0) && <GameOver finalStats = {gameOverInfo} host = {isHost}/>}
               </div>
               
             </div>

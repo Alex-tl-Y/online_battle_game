@@ -51,6 +51,26 @@ class Room {
   constructor(code) {
     this.code = code;
   }
+
+  getAllUsers() {
+    return this.allUsers;
+  }
+
+  getUserGuessed() {
+    return this.userGuessed;
+  }
+
+  getUnusedLocation() {
+    return this.unusedLocations;
+  }
+
+  getCurrentLocation() {
+    return this.currentLocation;
+  }
+
+  getRound() {
+    return this.round;
+  }
 }
 
 const app = express();
@@ -207,6 +227,14 @@ io.on("connection", (socket) => {
       })
 
     })
+
+    socket.on("replay-game", () => {
+      let roomInfo = findUserRoom(socket.id, allRooms);
+      hardResetUserRoomInfo(roomInfo[1]);
+      io.to(roomInfo[0]).emit("disable-gameover-overlay");
+      startGame(roomInfo[1]);
+
+    })
 })
 
 function startGame(room) {
@@ -220,7 +248,7 @@ function roundTransition(room) {
     user.score += user.score_from_round;
   })
 
-  let sec = 7;
+  let sec = 5;
 
   let roundInformation = [...room.allUsers];
   sortScoreFromRound(roundInformation);
@@ -232,7 +260,6 @@ function roundTransition(room) {
     sec--;
     if (sec < 0) {
       clearInterval(timer);
-      sec = 4;
       if (room.round > 3) {
         let gameOverInformation = [...room.allUsers];
         sortScore(gameOverInformation);
@@ -290,6 +317,21 @@ function softResetUserRoomInfo(userList) {
 
   }
 }
+
+function hardResetUserRoomInfo(room) {
+  for (const user of room.allUsers) {
+    user.score = 0;
+    user.score_from_round = 0;
+    user.coords_from_round = null;
+  }
+  
+  room.userGuessed = [];
+  room.unusedLocations = [...locationList];
+  room.currentLocation = null;
+  room.round = 1;
+
+}
+
 function sortScore(userList) {
   userList.sort((a,b) => a.score - b.score);
 }

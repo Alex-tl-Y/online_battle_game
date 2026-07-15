@@ -212,21 +212,52 @@
 
 /* Game Over Component css */
 #gameover-overlay {
-
+  position:fixed;
+  inset: 0;
+  background: rgba(104, 104, 104, 0.7);
+  justify-content: center;
+  align-items: center;
+  display:flex;
+  flex-direction: column;
 }
 
 #podium {
   display: flex;
+  position: relative;
+  align-items: flex-end;
 
 }
 #firstPlace {
   background-color: gold;
+  width:200px;
+  height: 400px;
+  text-align: center; 
+  border-radius: 8px;
 }
 
 #secondPlace {
   background-color: silver;
+  width: 200px;
+  height:250px;
+  text-align: center;
+  border-radius: 8px;
 }
 
 #thirdPlace {
   background-color: #CD7F32;
+  width: 200px;
+  height: 100px;
+  text-align: center;
+  border-radius: 8px;
+}
+
+#others {
+  background-color: white;
+  height: 200px;
+  width: 400px;
+  text-align: center;
+}
+
+#replay-button {
+  margin-top: 50px;
 }

@@ -1,10 +1,12 @@
-function GameOver({finalStats}) {
+import { socket } from "../socket"
+
+function GameOver({finalStats, host}) {
   const first = finalStats[0];
   const second = finalStats[1];
   const third = finalStats[2];
   const rest = finalStats.slice(3);
   function replay() {
-
+    socket.emit("replay-game");
   }
   return (
     <div id = "gameover-overlay">
@@ -36,7 +38,7 @@ function GameOver({finalStats}) {
         ))}
       </div>)}
 
-      <button id = "replay-button" onClick={replay}>Replay</button>
+      <button id = "replay-button" disabled = {!host} onClick={replay}>Replay</button>
     </div>
   )
 }
