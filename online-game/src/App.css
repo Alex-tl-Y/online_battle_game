@@ -200,6 +200,16 @@
   text-align: center;
 }
 
+.guessed-scoreboard {
+  background-color: lightgreen;
+  border: 2px solid black;
+  width: 225px;
+  height: 50px;
+  margin-bottom: 8px;
+  border-radius: 4px;
+  text-align: center;
+}
+
 /* Game Over Component css */
 #gameover-overlay {
 

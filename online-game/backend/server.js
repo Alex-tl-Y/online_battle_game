@@ -7,7 +7,7 @@ class User {
     score = 0;
     position = 0;
     score_from_round = 0;
-    coords_from_round = {x: 0, y: 0};
+    coords_from_round = null;
     
 
     constructor(name, id, isHost) {
@@ -100,8 +100,13 @@ io.on("connection", (socket) => {
 
     socket.on("host", () => {
       const info = findUserRoom(socket.id, allRooms);
-      if (info[2].isHost) {
-        io.to(socket.id).emit("isHost");
+      if (!info) {
+        io.to(socket.id).emit("back-to-home");
+      }
+      else {
+        if (info[2].isHost) {
+          io.to(socket.id).emit("isHost");
+        }
       }
     })
 
@@ -182,6 +187,8 @@ io.on("connection", (socket) => {
           
           }
           else {
+            user.coords_from_round = circle;
+
             roomInfo[1].userGuessed.push(user);
 
             const euclideanDistance = (roomInfo[1].currentLocation.x - circle.x) ** 2 + (roomInfo[1].currentLocation.y - circle.y) ** 2;
@@ -190,7 +197,6 @@ io.on("connection", (socket) => {
 
               if (socket.id == user.id) {
                 let calculated_score = Math.round(5000 * Math.pow(0.998, (euclideanDistance/200)));
-                user.score += calculated_score;
                 user.score_from_round = calculated_score;
                 io.to(roomInfo[0]).emit("set-scoreboard", roomInfo[1].allUsers);
                 io.to(socket.id).emit("cannot-guess");
@@ -210,11 +216,16 @@ function startGame(room) {
 }
 
 function roundTransition(room) {
+  room.allUsers.forEach((user) => {
+    user.score += user.score_from_round;
+  })
+
   let sec = 7;
 
   let roundInformation = [...room.allUsers];
   sortScoreFromRound(roundInformation);
   io.to(room.code).emit("round-transition", roundInformation, {x: room.currentLocation.x, y: room.currentLocation.y});
+  io.to(room.code).emit("set-scoreboard", room.allUsers);
   io.to(room.code).emit("cannot-guess");
 
   let timer = setInterval(() => {
@@ -228,6 +239,8 @@ function roundTransition(room) {
         io.to(room.code).emit("game-over", gameOverInformation);
       }
       else {
+        softResetUserRoomInfo(room.allUsers);
+        io.to(room.code).emit("set-scoreboard", room.allUsers);
         roundStart(room);
         
       }
@@ -270,6 +283,13 @@ function findUserRoom(socketid, roomMap) {
   return null;
 }
 
+function softResetUserRoomInfo(userList) {
+  for (const user of userList) {
+    user.score_from_round = 0;
+    user.coords_from_round = null;
+
+  }
+}
 function sortScore(userList) {
   userList.sort((a,b) => a.score - b.score);
 }

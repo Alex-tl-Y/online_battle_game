@@ -3,7 +3,7 @@ function Scoreboard({ players }) {
         <>
           <p>Scoreboard</p>
           {players.map(player => (
-            <div className = "scoreboard">{player.name}, {player.score}</div>
+            <div className = {player.coords_from_round ? "guessed-scoreboard" : "scoreboard"}>{player.name}, {player.score}</div>
           ))}
         </>
     )

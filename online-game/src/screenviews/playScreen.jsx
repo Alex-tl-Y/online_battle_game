@@ -114,6 +114,7 @@ function PlayScreen() {
     useEffect(() => {
     socket.on("game-over", (gameOverScoreList) => {
       setGameOverInfo(gameOverScoreList);
+      setRoundInformation([]);
     })
   }, [])
 
