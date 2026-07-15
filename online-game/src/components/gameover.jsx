@@ -3,6 +3,9 @@ function GameOver({finalStats}) {
   const second = finalStats[1];
   const third = finalStats[2];
   const rest = finalStats.slice(3);
+  function replay() {
+
+  }
   return (
     <div id = "gameover-overlay">
       <div id = "podium">
@@ -32,6 +35,8 @@ function GameOver({finalStats}) {
           <div>{player.name}</div>
         ))}
       </div>)}
+
+      <button id = "replay-button" onClick={replay}>Replay</button>
     </div>
   )
 }

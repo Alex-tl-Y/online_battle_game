@@ -98,6 +98,13 @@ io.on("connection", (socket) => {
       }
     })
 
+    socket.on("host", () => {
+      const info = findUserRoom(socket.id, allRooms);
+      if (info[2].isHost) {
+        io.to(socket.id).emit("isHost");
+      }
+    })
+
     // Handles disconnect cases
     socket.on("disconnect", () => {
         console.log("Player disconnected")
@@ -186,6 +193,7 @@ io.on("connection", (socket) => {
                 user.score += calculated_score;
                 user.score_from_round = calculated_score;
                 io.to(roomInfo[0]).emit("set-scoreboard", roomInfo[1].allUsers);
+                io.to(socket.id).emit("cannot-guess");
               }
             })
           }
@@ -198,6 +206,7 @@ io.on("connection", (socket) => {
 function startGame(room) {
   room.round = 1;
   roundStart(room);
+  io.to(room.code).emit("can-guess");
 }
 
 function roundTransition(room) {
@@ -206,6 +215,7 @@ function roundTransition(room) {
   let roundInformation = [...room.allUsers];
   sortScoreFromRound(roundInformation);
   io.to(room.code).emit("round-transition", roundInformation, {x: room.currentLocation.x, y: room.currentLocation.y});
+  io.to(room.code).emit("cannot-guess");
 
   let timer = setInterval(() => {
     sec--;
@@ -228,6 +238,7 @@ function roundTransition(room) {
 function roundStart(room) {
   const randomNumber = Math.floor(Math.random() * room.unusedLocations.length);
   let sec = 30;
+  io.to(room.code).emit("can-guess");
 
   room.currentLocation = room.unusedLocations[randomNumber];
 

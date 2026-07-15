@@ -20,6 +20,8 @@ function PlayScreen() {
   const [roundInformation, setRoundInformation] = useState([])
   const [gameOverInfo, setGameOverInfo] = useState([])
   const [minimapPos, setMinimapPos] = useState({x: 0, y: 0, zoom: 1})
+  const [isHost, setisHost] = useState(false);
+  const [canGuess, setCanGuess] = useState(false);
   const navigate = useNavigate();
 
 
@@ -27,6 +29,7 @@ function PlayScreen() {
   useEffect(() => {
     socket.emit("scoreboard");
     socket.emit("roomcode");
+    socket.emit("host");
     
     
     socket.on("set-scoreboard", (allUsers) => {
@@ -37,6 +40,7 @@ function PlayScreen() {
     
   }, [])
 
+  // Sets the room code and displays it in the lobby
   useEffect(() => {
     socket.on("set-roomcode", (roomcode) => {
       setRoomCode(roomcode);
@@ -44,12 +48,20 @@ function PlayScreen() {
     })
   }, [])
 
-    useEffect(() => {
+  // Sends players back to the home screen on a reload or if they try to bypass with /play
+  useEffect(() => {
     socket.on("back-to-home", () => {
       navigate("/");
     }) 
   })
   
+  // User is a host which means they get to start matches and has some visuals to indicate that they are the host.
+  useEffect(() => {
+    socket.on("isHost", () => {
+      setisHost(true);
+    })
+  })
+
   // Listens for updates on the location the user has to guess.
   useEffect(() => {
     socket.on("display-location", (currentLocation) => {
@@ -88,6 +100,16 @@ function PlayScreen() {
       setActualCoords(locationCoords);
     })
   }, [])
+
+  useEffect(() => {
+    socket.on("can-guess", () => {
+      setCanGuess(true);
+    })
+
+    socket.on("cannot-guess", () => {
+      setCanGuess(false);
+    })
+  })
 
     useEffect(() => {
     socket.on("game-over", (gameOverScoreList) => {
@@ -234,8 +256,8 @@ function PlayScreen() {
           <div id = "playButton">
             <button id = "backButton" onClick={goBack}>Back</button>
             <p id = "test">{minimapPos.zoom}</p>
-            <button id = "randomLocationButton" onClick = {randomLocation}>Random Location</button>
-            <button id = "guess" onClick = {calculateDistance}>Guess</button>
+            <button disabled = {!isHost} className = "start-button" onClick = {randomLocation}>Start Game!</button>
+            <button disabled = {!canGuess} className="guess-button" onClick = {calculateDistance}>Guess</button>
           </div>
         </>
     );

@@ -145,14 +145,23 @@
   margin-left: 830px;
 }
 
-#randomLocationButton {
+.start-button {
   margin-left: 10px;
   margin-top: 10px;
 }
 
-#guess {
+.start-button:disabled {
+  cursor: not-allowed;
+
+}
+
+.guess-button {
   margin-left: 10px;
   margin-top: 10px;
+}
+
+.guess-button:disabled {
+  cursor:not-allowed;
 }
 #test {
   position: absolute;
