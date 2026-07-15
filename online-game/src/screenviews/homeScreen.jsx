@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { socket } from "../socket"
 
 function HomeScreen() {
+    const [champion, setChampion] = useState('')
     const [username, setUsername] = useState('')
     const [roomCode, setRoomCode] = useState('')
     const [invalidCode, setInvalidCode] = useState('')
@@ -45,6 +46,7 @@ function HomeScreen() {
         <div id = "homepage">
           <div id = "homescreen">
             <form id = "userHomeInput">
+              <input id = "champion" placeholder="Enter champion for your icon" className = "userInput" onChange = {(e) => setUsername(e.target.value)} value = {username}/>
               <input id = "username" placeholder = "Enter username" className = "userInput" onChange = {(e) => setUsername(e.target.value)} value = {username}/>
               <input id = "joinGame" placeholder = "Enter game code" className = "userInput" onChange = {(e) => setRoomCode(e.target.value)} value = {roomCode}/>
 
