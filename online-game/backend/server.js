@@ -182,7 +182,9 @@ io.on("connection", (socket) => {
             roomInfo[1].allUsers.forEach((user) => {
 
               if (socket.id == user.id) {
-                user.score += Math.round(5000 * Math.pow(0.998, (euclideanDistance/200)));
+                let calculated_score = Math.round(5000 * Math.pow(0.998, (euclideanDistance/200)));
+                user.score += calculated_score;
+                user.score_from_round = calculated_score;
                 io.to(roomInfo[0]).emit("set-scoreboard", roomInfo[1].allUsers);
               }
             })

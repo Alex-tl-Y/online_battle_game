@@ -178,8 +178,8 @@ function PlayScreen() {
           <div id = "playscreen">
             <div id = "game-information">
               <p id = "round-number">Round {round}</p>
+              <p id = "room-code">Room Code: {roomCode}</p>
               <p id = "timer-display">{timer}</p>
-              <p id = "room-code">{roomCode}</p>
             </div>
 
             <div id = "bottom-half">

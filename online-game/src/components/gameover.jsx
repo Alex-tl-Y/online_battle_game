@@ -4,25 +4,26 @@ function GameOver({finalStats}) {
   const third = finalStats[2];
   const rest = finalStats.slice(3);
   return (
-    <>
-      
-      {first && (
-        <div id = "firstPlace">
-        <h1>1st Place</h1>
-        {first.name}
+    <div id = "gameover-overlay">
+      <div id = "podium">
+        {second && (
+          <div id = "secondPlace">
+          <h1>2nd Place</h1>
+          {second.name}
         </div>)}
 
-      {second && (
-        <div id = "secondPlace">
-        <h1>2nd Place</h1>
-        {second.name}
-      </div>)}
+        {first && (
+          <div id = "firstPlace">
+          <h1>1st Place</h1>
+          {first.name}
+          </div>)}
 
-      {third && (
-        <div id = "thirdPlace">
-        <h1>3rd Place</h1>
-        {third.name}
-      </div>)}
+        {third && (
+          <div id = "thirdPlace">
+          <h1>3rd Place</h1>
+          {third.name}
+        </div>)}
+      </div>
 
       {rest.length > 0 && (
         <div id = "others">
@@ -31,7 +32,7 @@ function GameOver({finalStats}) {
           <div>{player.name}</div>
         ))}
       </div>)}
-    </>
+    </div>
   )
 }
 
