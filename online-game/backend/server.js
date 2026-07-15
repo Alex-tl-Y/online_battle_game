@@ -72,20 +72,30 @@ let allRooms = new Map();
 
 io.on("connection", (socket) => {
     console.log("Player connected", socket.id);
-
+    
     // Handles updating the scoreboard
     socket.on("scoreboard", () => {
       const roomInfo = findUserRoom(socket.id, allRooms);
-      console.log(allRooms);
-      console.log(roomInfo);
-      io.to(roomInfo[0]).emit("set-scoreboard", roomInfo[1].allUsers);
+      if (!roomInfo) {
+        io.to(socket.id).emit("back-to-home");
+      }
+      else {
+        console.log(allRooms);
+        console.log(roomInfo);
+        io.to(roomInfo[0]).emit("set-scoreboard", roomInfo[1].allUsers);
+      }
         
     });
 
     // Handles sending the room code
     socket.on("roomcode", () => {
       const roomInfo = findUserRoom(socket.id, allRooms);
-      io.to(roomInfo[0]).emit("set-roomcode", roomInfo[0]);
+      if (!roomInfo) {
+        io.to(socket.id).emit("back-to-home");
+      }
+      else {
+        io.to(roomInfo[0]).emit("set-roomcode", roomInfo[0]);
+      }
     })
 
     // Handles disconnect cases

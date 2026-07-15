@@ -44,6 +44,12 @@ function PlayScreen() {
     })
   }, [])
 
+    useEffect(() => {
+    socket.on("back-to-home", () => {
+      navigate("/");
+    }) 
+  })
+  
   // Listens for updates on the location the user has to guess.
   useEffect(() => {
     socket.on("display-location", (currentLocation) => {
