@@ -135,6 +135,16 @@ io.on("connection", (socket) => {
       }
     })
 
+    socket.on("champion-icon", () => {
+      const info = findUserRoom(socket.id, allRooms);
+      if (!info) {
+        io.to(socket.id).emit("back-to-home");
+      }
+      else {
+        io.to(socket.id).emit("set-champion-icon", info[2].champion)
+      }
+    })
+
     // Handles disconnect cases
     socket.on("disconnect", () => {
         console.log("Player disconnected")

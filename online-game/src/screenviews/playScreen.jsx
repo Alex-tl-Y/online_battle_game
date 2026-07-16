@@ -9,6 +9,7 @@ import { socket } from "../socket";
 
 function PlayScreen() {
   const [circle, setCircle] = useState(null)
+  const [championIcon, setChampionIcon] = useState('');
   const [actualCoords, setActualCoords] = useState(null)
   const [location, setLocation] = useState(null)
   const [score, setScore] = useState(0)
@@ -30,6 +31,7 @@ function PlayScreen() {
     socket.emit("scoreboard");
     socket.emit("roomcode");
     socket.emit("host");
+    socket.emit("champion-icon");
     
     
     socket.on("set-scoreboard", (allUsers) => {
@@ -59,6 +61,12 @@ function PlayScreen() {
   useEffect(() => {
     socket.on("isHost", () => {
       setisHost(true);
+    })
+  })
+
+  useEffect(() => {
+    socket.on("set-champion-icon", (champion) => {
+      setChampionIcon(champion);
     })
   })
 
@@ -231,15 +239,16 @@ function PlayScreen() {
                   pointerEvents: "none",
                 }}
                 width="100%"
-                height="100%">{circle && (<circle cx = {circle.x} cy = {circle.y} r = '5' fill = 'red'/>)}</svg> 
+                height="100%">{circle && (<image className="user-pointer" x = {circle.x - 15} y = {circle.y - 15} href= {`https://ddragon.leagueoflegends.com/cdn/16.14.1/img/champion/${championIcon}.png`}/>)}
+                </svg> 
 
                 <svg style={{
                   position: "absolute",
                   inset: "0",
                   pointerEvents: "none",
                 }}
-                width="100%"
-                height="100%">{actualCoords && (<circle cx = {actualCoords.x} cy = {actualCoords.y} r = '5' fill = 'blue'/>)}</svg>       
+                  width="100%"
+                  height="100%">{actualCoords && (<circle cx = {actualCoords.x} cy = {actualCoords.y} r = '5' fill = 'blue'/>)}</svg>       
                 </div>
               </div>
 

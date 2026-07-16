@@ -186,6 +186,11 @@
   position: absolute;
 }
 
+.user-pointer {
+  width: 30px;
+  clip-path: circle(40%);
+  
+}
 /* Transition component css*/
 
 #transition_overlay {
