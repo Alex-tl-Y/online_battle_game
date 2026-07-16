@@ -1,9 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import ChampionDropdown from "../components/championDropdown";
 import { socket } from "../socket"
 
 function HomeScreen() {
-    const [champion, setChampion] = useState('')
+    const [championInput, setChampionInput] = useState('')
+    const [championSelected, setChampionSelected] = useState('')
     const [username, setUsername] = useState('')
     const [roomCode, setRoomCode] = useState('')
     const [invalidCode, setInvalidCode] = useState('')
@@ -39,14 +41,23 @@ function HomeScreen() {
         
         
       }
-      
+    
     }
+
+    function selectChamp(champ) {
+      setChampionSelected(champ);
+    }
+
     return (
       <>
         <div id = "homepage">
           <div id = "homescreen">
             <form id = "userHomeInput">
-              <input id = "champion" placeholder="Enter champion for your icon" className = "userInput" onChange = {(e) => setUsername(e.target.value)} value = {username}/>
+              <input id = "champion" placeholder="Enter champion for your icon" className = "userInput" onChange = {(e) => setChampionInput(e.target.value)} value = {championInput}/>
+              <div id = "champion-icon">
+                <ChampionDropdown championInput = {championInput} championSelected={selectChamp}/>
+                {championSelected.length > 0 && <img src= {`https://ddragon.leagueoflegends.com/cdn/16.14.1/img/champion/${championSelected}.png`}/>}
+              </div>
               <input id = "username" placeholder = "Enter username" className = "userInput" onChange = {(e) => setUsername(e.target.value)} value = {username}/>
               <input id = "joinGame" placeholder = "Enter game code" className = "userInput" onChange = {(e) => setRoomCode(e.target.value)} value = {roomCode}/>
 
