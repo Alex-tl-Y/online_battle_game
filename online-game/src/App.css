@@ -191,6 +191,12 @@
   clip-path: circle(40%);
   
 }
+
+.line {
+  stroke: black;
+  stroke-width: 2;
+  stroke-dasharray: 2, 2;
+}
 /* Transition component css*/
 
 #transition_overlay {

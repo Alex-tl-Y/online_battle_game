@@ -248,7 +248,21 @@ function PlayScreen() {
                   pointerEvents: "none",
                 }}
                   width="100%"
-                  height="100%">{actualCoords && (<circle cx = {actualCoords.x} cy = {actualCoords.y} r = '5' fill = 'blue'/>)}</svg>       
+                  height="100%">{actualCoords && (<circle cx = {actualCoords.x} cy = {actualCoords.y} r = '5' fill = 'blue'/>)}</svg>   
+
+                {roundInformation.length > 0 && roundInformation.map((player) => (
+                  <svg style={{
+                  position: "absolute",
+                  inset: "0",
+                  pointerEvents: "none",
+                }}
+                  width="100%"
+                  height="100%">{player.coords_from_round && (<>
+                  <image className = "user-pointer" x = {player.coords_from_round.x - 15} y = {player.coords_from_round.y - 15} href= {`https://ddragon.leagueoflegends.com/cdn/16.14.1/img/champion/${player.champion}.png`}/>
+                  && <line className="line" x1={actualCoords.x} y1={actualCoords.y} x2={player.coords_from_round.x} y2={player.coords_from_round.y} />
+                  </>
+                  )}</svg>
+                ))}    
                 </div>
               </div>
 
