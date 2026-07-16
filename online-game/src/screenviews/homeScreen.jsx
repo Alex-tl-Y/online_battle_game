@@ -27,17 +27,17 @@ function HomeScreen() {
       e.preventDefault();
       console.log("joining");
       
-      if (username != "" && roomCode != "") {
-        socket.emit("join-game", username, roomCode);
+      if (username != "" && roomCode != "" && championSelected != "") {
+        socket.emit("join-game", username, roomCode, championSelected);
       }
 
     }
 
     function createGame(e) {
       e.preventDefault();
-      if (username != "") {
+      if (username != "" && championSelected != "") {
         navigate("/play");
-        socket.emit("create-game", username);
+        socket.emit("create-game", username, championSelected);
         
         
       }
@@ -53,7 +53,7 @@ function HomeScreen() {
         <div id = "homepage">
           <div id = "homescreen">
             <form id = "userHomeInput">
-              <input id = "champion" placeholder="Enter champion for your icon" className = "userInput" onChange = {(e) => setChampionInput(e.target.value)} value = {championInput}/>
+              <input id = "championInput" placeholder="Enter champion for your icon" className = "userInput" onChange = {(e) => setChampionInput(e.target.value)} value = {championInput}/>
               <div id = "champion-icon">
                 <ChampionDropdown championInput = {championInput} championSelected={selectChamp}/>
                 {championSelected.length > 0 && <img src= {`https://ddragon.leagueoflegends.com/cdn/16.14.1/img/champion/${championSelected}.png`}/>}

@@ -17,7 +17,7 @@
   #homescreen {
     margin: 0 auto;
     background-color: lightblue;
-    height: 400px;
+    height: 60vh;
     width: 50vh;
     border-radius: 4px;
     display: flex;
@@ -32,6 +32,25 @@
     flex-direction: column;
     gap: 2vh;
   }
+
+.champ-dropdown {
+  background-color: white;
+  width: 200px;
+  height: 25px;
+  border-color: gray;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 2px;
+  
+}
+.champ-dropdown:hover {
+  background-color: lightgray;
+  
+}
+
+#dropdown-container {
+
+}
 
 #joinGameButton {
   background-color: #53e237;
@@ -198,6 +217,7 @@
   margin-bottom: 8px;
   border-radius: 4px;
   text-align: center;
+  display:flex;
 }
 
 .guessed-scoreboard {
@@ -208,6 +228,13 @@
   margin-bottom: 8px;
   border-radius: 4px;
   text-align: center;
+  display: flex;
+}
+
+.user-icon {
+  clip-path: circle(40%);
+  width: 50px;
+  margin-right: 50px;
 }
 
 /* Game Over Component css */

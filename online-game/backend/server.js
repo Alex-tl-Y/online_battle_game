@@ -10,10 +10,11 @@ class User {
     coords_from_round = null;
     
 
-    constructor(name, id, isHost) {
+    constructor(name, id, isHost, champion) {
         this.name = name;
         this.id = id;
         this.isHost = isHost;
+        this.champion = champion;
     }
 
     getName () {
@@ -38,6 +39,10 @@ class User {
 
     getScoreFromRound() {
         return this.score_from_round;
+    }
+
+    getChampion() {
+      return this.champion;
     }
 }
 
@@ -153,7 +158,7 @@ io.on("connection", (socket) => {
     });
 
     // Creates a game (lobby)
-    socket.on("create-game", (username) => {
+    socket.on("create-game", (username, champion) => {
         console.log("Game created");
         let roomCode;
         // Ensures unique room code
@@ -165,7 +170,7 @@ io.on("connection", (socket) => {
         }
         
         const room = new Room(roomCode);
-        let user = new User(username, socket.id, true);
+        let user = new User(username, socket.id, true, champion);
         room.allUsers.push(user)
         allRooms.set(roomCode, room);
         socket.join(roomCode);
@@ -174,10 +179,10 @@ io.on("connection", (socket) => {
     });
 
     // Join a game (lobby)
-    socket.on("join-game", (username, roomcode) => {
+    socket.on("join-game", (username, roomcode, champion) => {
       if (allRooms.has(roomcode)) {
         let room = allRooms.get(roomcode);
-        let user = new User(username, socket.id, false);
+        let user = new User(username, socket.id, false, champion);
         room.allUsers.push(user);
         socket.join(roomcode);
         io.to(socket.id).emit("valid-roomcode");

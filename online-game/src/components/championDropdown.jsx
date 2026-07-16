@@ -18,12 +18,12 @@ function ChampionDropdown ({ championInput, championSelected }) {
   }
 
   return (
-    <>
+    <div id = "dropdown-container">
       {championInput.length > 0 && championList.filter(champ => champ.toLowerCase().startsWith(championInput.toLowerCase())).slice(0,5).map(champ => (
         <div className="champ-dropdown" onClick={() => championSelected(champ)}>{champ}</div>
       ))}
       
-    </>
+    </div>
   )
 }
 
