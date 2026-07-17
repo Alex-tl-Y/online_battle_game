@@ -9,6 +9,7 @@ function HomeScreen() {
     const [username, setUsername] = useState('')
     const [roomCode, setRoomCode] = useState('')
     const [invalidCode, setInvalidCode] = useState('')
+    const [champFocused, setChampFocused] = useState(false)
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -46,6 +47,15 @@ function HomeScreen() {
 
     function selectChamp(champ) {
       setChampionSelected(champ);
+      setChampFocused(false);
+    }
+
+    function champInputFocused() {
+      setChampFocused(true);
+    }
+
+    function champInputBlur() {
+      setChampFocused(false);
     }
 
     return (
@@ -53,10 +63,13 @@ function HomeScreen() {
         <div id = "homepage">
           <div id = "homescreen">
             <form id = "userHomeInput">
-              <input id = "championInput" placeholder="Enter champion for your icon" className = "userInput" onChange = {(e) => setChampionInput(e.target.value)} value = {championInput}/>
+              <input id = "championInput" placeholder="Enter champion for your icon" className = "userInput" onFocus={champInputFocused} onBlur={champInputBlur} onChange = {(e) => setChampionInput(e.target.value)} value = {championInput}/>
               <div id = "champion-icon">
-                <ChampionDropdown championInput = {championInput} championSelected={selectChamp}/>
-                {championSelected.length > 0 && <img src= {`https://ddragon.leagueoflegends.com/cdn/16.14.1/img/champion/${championSelected}.png`}/>}
+                {champFocused && <ChampionDropdown championInput = {championInput} championSelected={selectChamp}/>}
+                <div id = "champion-icon-container">
+                  {championSelected.length > 0 && <img src= {`https://ddragon.leagueoflegends.com/cdn/16.14.1/img/champion/${championSelected}.png`}/>}
+                </div>
+                
               </div>
               <input id = "username" placeholder = "Enter username" className = "userInput" onChange = {(e) => setUsername(e.target.value)} value = {username}/>
               <input id = "joinGame" placeholder = "Enter game code" className = "userInput" onChange = {(e) => setRoomCode(e.target.value)} value = {roomCode}/>

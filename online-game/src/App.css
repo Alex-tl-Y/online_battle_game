@@ -33,6 +33,12 @@
     gap: 2vh;
   }
 
+#dropdown-container{
+  position: absolute;
+  left: 44.8%;
+  top: 32%;
+  
+}
 .champ-dropdown {
   background-color: white;
   width: 200px;
@@ -41,15 +47,35 @@
   border-style: solid;
   border-width: 1px;
   border-radius: 2px;
+  display: flex;
+  align-items: center;
+  
+  
   
 }
 .champ-dropdown:hover {
   background-color: lightgray;
+  cursor: pointer;
   
 }
 
 #dropdown-container {
 
+}
+
+#champion-icon-container {
+  height: 128px;
+  width: 128px;
+  border: 4px solid gold;
+}
+
+.dropdownIcon {
+  width: 20px;
+  margin-left: 5px;
+}
+
+.dropdownName {
+  margin-left : 5px;
 }
 
 #joinGameButton {
