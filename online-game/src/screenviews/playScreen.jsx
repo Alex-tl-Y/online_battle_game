@@ -1,4 +1,5 @@
 import minimap from "../assets/sr-minimap.png"
+import flag from "../assets/flag_icon.png"
 import {locationList} from "../location_info/locationList"
 import Scoreboard from "../components/scoreboard"
 import TransitionPage from "../components/transition";
@@ -239,11 +240,22 @@ function PlayScreen() {
   function MinimapClick() {
     const map = useMapEvents({
       click: (e) => {
-        setCircle({x: e.latlng.lng, y: e.latlng.lat})
-        console.log(e.latlng)
+        //if (canGuess) {
+          setCircle({x: e.latlng.lng, y: e.latlng.lat})
+          console.log(e.latlng)
+        //}
       }
     })
     return null
+  }
+
+  function RoundOverAnimation() {
+    const map = useMap();
+    if (roundInformation.length > 0) {
+      map.setZoom(-1);
+      map.panTo([150, 150]);
+    }
+    return null;
   }
     return (
         <>
@@ -269,23 +281,40 @@ function PlayScreen() {
                     bounds={bounds}
                   />
                   <MinimapClick/>
-                  {circle && <Marker position={[circle.y, circle.x]}>
-                    <Popup></Popup>
+                  <RoundOverAnimation/>
+                  {circle && <Marker position={[circle.y, circle.x]} icon={L.divIcon({
+                    className: "user-pointer",
+                    html: `<img src="https://ddragon.leagueoflegends.com/cdn/16.14.1/img/champion/${championIcon}.png"/>`,
+                    iconAnchor: [7.5, 7.5],
+                    iconSize: [15, 15],
+                  })}>
+                    
                   </Marker>}
 
                   {roundInformation.length > 0 && roundInformation.map((player) => player.coords_from_round && (
                     <>
-                    <Marker position={[player.coords_from_round.y, player.coords_from_round.x]}>
-                        <Popup></Popup>
+                    <Marker position={[player.coords_from_round.y, player.coords_from_round.x]} icon={L.divIcon({
+                      className: "user-pointer",
+                      html: `<img src="https://ddragon.leagueoflegends.com/cdn/16.14.1/img/champion/${player.champion}.png"/>`,
+                      iconAnchor: [7.5, 7.5],
+                      iconSize: [15, 15],
+                    })}>
+                        
                       </Marker>
                     
-                    && <Polyline className = "line" positions={[[actualCoords.y, actualCoords.x], [player.coords_from_round.y, player.coords_from_round.x]]}/>
+                       <Polyline color = "black" dashArray = "2, 4" weight = "2" positions={[[actualCoords.y, actualCoords.x], [player.coords_from_round.y, player.coords_from_round.x]]}/>
                     </>
                      
                   ))}
 
-                  {actualCoords && <Marker position={[actualCoords.y, actualCoords.x]}>
-                      <Popup></Popup>
+                  {actualCoords && <Marker position={[actualCoords.y, actualCoords.x]} icon = {L.divIcon({
+                    className: "user-pointer",
+                    html: ` <img src="${flag}"/> `,
+                    iconAnchor: [7.5, 7.5],
+                    iconSize: [15, 15],
+
+                  })}>
+                      
                     </Marker>}
                   
                 </MapContainer>

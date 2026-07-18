@@ -217,9 +217,11 @@
   position: absolute;
 }
 
-.user-pointer {
-  width: 30px;
-  clip-path: circle(40%);
+.user-pointer img{
+  
+  height: 15px;
+  border-radius: 70%;
+  border: black solid 1px;
   
 }
 
