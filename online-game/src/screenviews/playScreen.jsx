@@ -6,10 +6,9 @@ import GameOver from "../components/gameover";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { socket } from "../socket";
-import {
-  TransformWrapper,
-  TransformComponent,
-} from "react-zoom-pan-pinch";
+import { MapContainer, ImageOverlay, useMap, useMapEvents, Marker, Popup, AttributionControl, Polyline } from 'react-leaflet'
+import "leaflet/dist/leaflet.css";
+import L from "leaflet";
 
 function PlayScreen() {
   const [circle, setCircle] = useState(null)
@@ -30,7 +29,10 @@ function PlayScreen() {
   const [canGuess, setCanGuess] = useState(false);
   const navigate = useNavigate();
 
-
+  const bounds = [
+  [0, 0],
+  [300, 300],
+];
   // Listens for updates to the scoreboard.
   useEffect(() => {
     socket.emit("scoreboard");
@@ -80,11 +82,11 @@ function PlayScreen() {
   }, [])
 
   // Handles the case where the user goes back to the home screen.
-  useEffect(() => {
-    return () => {
-      socket.emit("pressed-back");
-    }
-  }, [])
+  // useEffect(() => {
+  //   return () => {
+  //     socket.emit("pressed-back");
+  //   }
+  // }, [])
   
   useEffect(() => {
     socket.on("set-champion-icon", (champion) => {
@@ -233,6 +235,16 @@ function PlayScreen() {
       
     
   }
+
+  function MinimapClick() {
+    const map = useMapEvents({
+      click: (e) => {
+        setCircle({x: e.latlng.lng, y: e.latlng.lat})
+        console.log(e.latlng)
+      }
+    })
+    return null
+  }
     return (
         <>
           <div id = "playscreen">
@@ -248,44 +260,37 @@ function PlayScreen() {
               </div>
 
               <div id = "minimap">
-                <div id = "minimapview" onWheel={zoomFeature}
-                style = {{
-                  transformOrigin: "0 0",
-                  transform: `translate(${minimapPos.x}px, ${minimapPos.y}px) scale(${minimapPos.zoom})`,
-                  }}>
-                  <img id = "minimapimg" src = {minimap} onClick={handleMinimapClick} />
-                
-                  <svg style={{
-                  position: "absolute",
-                  inset: "0",
-                  pointerEvents: "none",
-                }}
-                width="100%"
-                height="100%">{circle && (<image className="user-pointer" x = {circle.x - 15} y = {circle.y - 15} href= {`https://ddragon.leagueoflegends.com/cdn/16.14.1/img/champion/${championIcon}.png`}/>)}
-                </svg> 
 
-                <svg style={{
-                  position: "absolute",
-                  inset: "0",
-                  pointerEvents: "none",
-                }}
-                  width="100%"
-                  height="100%">{actualCoords && (<circle cx = {actualCoords.x} cy = {actualCoords.y} r = '5' fill = 'blue'/>)}</svg>   
 
-                {roundInformation.length > 0 && roundInformation.map((player) => (
-                  <svg style={{
-                  position: "absolute",
-                  inset: "0",
-                  pointerEvents: "none",
-                }}
-                  width="100%"
-                  height="100%">{player.coords_from_round && (<>
-                  <image className = "user-pointer" x = {player.coords_from_round.x - 15} y = {player.coords_from_round.y - 15} href= {`https://ddragon.leagueoflegends.com/cdn/16.14.1/img/champion/${player.champion}.png`}/>
-                  && <line className="line" x1={actualCoords.x} y1={actualCoords.y} x2={player.coords_from_round.x} y2={player.coords_from_round.y} />
-                  </>
-                  )}</svg>
-                ))}    
-                </div>
+                <MapContainer center={[150,150]} zoom={-1} scrollWheelZoom={true} style={{height: "300px", width: "300px"}} attributionControl={false} crs={L.CRS.Simple}>
+                  <ImageOverlay
+                    
+                    url={minimap}
+                    bounds={bounds}
+                  />
+                  <MinimapClick/>
+                  {circle && <Marker position={[circle.y, circle.x]}>
+                    <Popup></Popup>
+                  </Marker>}
+
+                  {roundInformation.length > 0 && roundInformation.map((player) => player.coords_from_round && (
+                    <>
+                    <Marker position={[player.coords_from_round.y, player.coords_from_round.x]}>
+                        <Popup></Popup>
+                      </Marker>
+                    
+                    && <Polyline className = "line" positions={[[actualCoords.y, actualCoords.x], [player.coords_from_round.y, player.coords_from_round.x]]}/>
+                    </>
+                     
+                  ))}
+
+                  {actualCoords && <Marker position={[actualCoords.y, actualCoords.x]}>
+                      <Popup></Popup>
+                    </Marker>}
+                  
+                </MapContainer>
+
+
               </div>
 
               <div id = "randomLocation">
@@ -309,7 +314,7 @@ function PlayScreen() {
           <div id = "playButton">
             <button id = "backButton" onClick={goBack}>Back</button>
             <p id = "test">{minimapPos.zoom}</p>
-            <button disabled = {!canGuess} className="guess-button" onClick = {calculateDistance}>Guess</button>
+            <button disabled = {!canGuess || !circle} className="guess-button" onClick = {calculateDistance}>Guess</button>
             {!inGame && <button disabled = {!isHost} className = "start-button" onClick = {randomLocation}>Start Game!</button>}
           </div>
         </>
