@@ -6,6 +6,10 @@ import GameOver from "../components/gameover";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { socket } from "../socket";
+import {
+  TransformWrapper,
+  TransformComponent,
+} from "react-zoom-pan-pinch";
 
 function PlayScreen() {
   const [circle, setCircle] = useState(null)
@@ -22,6 +26,7 @@ function PlayScreen() {
   const [gameOverInfo, setGameOverInfo] = useState([])
   const [minimapPos, setMinimapPos] = useState({x: 0, y: 0, zoom: 1})
   const [isHost, setisHost] = useState(false);
+  const [inGame, setInGame] = useState(false);
   const [canGuess, setCanGuess] = useState(false);
   const navigate = useNavigate();
 
@@ -55,20 +60,37 @@ function PlayScreen() {
     socket.on("back-to-home", () => {
       navigate("/");
     }) 
-  })
+  }, [])
   
   // User is a host which means they get to start matches and has some visuals to indicate that they are the host.
   useEffect(() => {
     socket.on("isHost", () => {
       setisHost(true);
     })
-  })
+  }, [])
 
+  useEffect(() => {
+    socket.on("in-game", (gameCondition) => {
+      setInGame(true);
+    })
+
+    socket.on("not-ingame", (gameCondition) => {
+      setInGame(false);
+    })
+  }, [])
+
+  // Handles the case where the user goes back to the home screen.
+  useEffect(() => {
+    return () => {
+      socket.emit("pressed-back");
+    }
+  }, [])
+  
   useEffect(() => {
     socket.on("set-champion-icon", (champion) => {
       setChampionIcon(champion);
     })
-  })
+  }, [])
 
   // Listens for updates on the location the user has to guess.
   useEffect(() => {
@@ -287,8 +309,8 @@ function PlayScreen() {
           <div id = "playButton">
             <button id = "backButton" onClick={goBack}>Back</button>
             <p id = "test">{minimapPos.zoom}</p>
-            <button disabled = {!isHost} className = "start-button" onClick = {randomLocation}>Start Game!</button>
             <button disabled = {!canGuess} className="guess-button" onClick = {calculateDistance}>Guess</button>
+            {!inGame && <button disabled = {!isHost} className = "start-button" onClick = {randomLocation}>Start Game!</button>}
           </div>
         </>
     );

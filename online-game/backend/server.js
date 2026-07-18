@@ -52,6 +52,7 @@ class Room {
   unusedLocations = [...locationList];
   currentLocation = null;
   round = 1;
+  inGame = false;
 
   constructor(code) {
     this.code = code;
@@ -120,6 +121,14 @@ io.on("connection", (socket) => {
       }
       else {
         io.to(roomInfo[0]).emit("set-roomcode", roomInfo[0]);
+
+        // Kind of a placeholder for now but checks to see if a user joins in the middle of a game.
+
+        if (roomInfo[1].inGame) {
+          io.to(roomInfo[0]).emit("display-location", roomInfo[1].currentLocation);
+          io.to(roomInfo[0]).emit("round-number", roomInfo[1].round);
+          io.to(roomInfo[0]).emit("in-game");
+        }
       }
     })
 
@@ -159,14 +168,41 @@ io.on("connection", (socket) => {
                 io.to(roomInfo[0]).emit("set-scoreboard", roomInfo[1].allUsers);
               }
               else {
+                io.to(roomInfo[0]).emit("back-to-home");
                 allRooms.delete(roomInfo[0]);
+                io.in(roomInfo[0]).socketsLeave(roomInfo[0]);
               }
             }
             
           })
         }
     });
-
+    
+    // Similar to disconnect, but handles if the user presses to go back. Since the socket stays the same in this case,
+    // we have to manually remove them from the socket room. With disconnect, the socket will be different so 
+    // there's no need to do that.
+    socket.on("pressed-back", () => {
+      const roomInfo = findUserRoom(socket.id, allRooms);
+        if (roomInfo) {
+          roomInfo[1].allUsers.forEach((user) => {
+            if (socket.id == user.id) {
+              if (!user.isHost) {
+                roomInfo[1].allUsers = roomInfo[1].allUsers.filter(element => element !== user);
+                roomInfo[1].userGuessed = roomInfo[1].userGuessed.filter(element => element !== user);
+                socket.leave(roomInfo[0]);
+                
+                io.to(roomInfo[0]).emit("set-scoreboard", roomInfo[1].allUsers);
+              }
+              else {
+                io.to(roomInfo[0]).emit("back-to-home");
+                allRooms.delete(roomInfo[0]);
+                io.in(roomInfo[0]).socketsLeave(roomInfo[0]);
+              }
+            }
+            
+          })
+        }
+    })
     // Creates a game (lobby)
     socket.on("create-game", (username, champion) => {
         console.log("Game created");
@@ -254,8 +290,10 @@ io.on("connection", (socket) => {
 
 function startGame(room) {
   room.round = 1;
+  room.inGame = true;
   roundStart(room);
   io.to(room.code).emit("can-guess");
+  io.to(room.code).emit("in-game");
 }
 
 function roundTransition(room) {
@@ -279,6 +317,8 @@ function roundTransition(room) {
         let gameOverInformation = [...room.allUsers];
         sortScore(gameOverInformation);
         io.to(room.code).emit("game-over", gameOverInformation);
+        room.inGame = false;
+        io.to(room).emit("not-ingame");
       }
       else {
         softResetUserRoomInfo(room.allUsers);
@@ -344,6 +384,7 @@ function hardResetUserRoomInfo(room) {
   room.unusedLocations = [...locationList];
   room.currentLocation = null;
   room.round = 1;
+  room.inGame = false;
 
 }
 

@@ -3,9 +3,9 @@ function Scoreboard({ players }) {
         <>
           <p>Scoreboard</p>
           {players.map(player => (
-            <div className = {player.coords_from_round ? "guessed-scoreboard" : "scoreboard"}>
+            <div className = {player.coords_from_round ? "guessed-scoreboard" : "ungussed-scoreboard"}>
               <img className = "user-icon" src= {`https://ddragon.leagueoflegends.com/cdn/16.14.1/img/champion/${player.champion}.png`}/>
-              <p className = "scoreboard-info">{player.name}, {player.score}</p>
+              <p className = "scoreboard-info">{player.name}: {player.score}</p>
               </div>
           ))}
         </>

@@ -246,7 +246,7 @@
 }
 
 /* Scoreboard component css*/
-.scoreboard {
+.ungussed-scoreboard {
   background-color: rgb(211, 211, 211);
   border: 2px solid black;
   width: 225px;
@@ -271,7 +271,7 @@
 .user-icon {
   clip-path: circle(40%);
   width: 50px;
-  margin-right: 50px;
+  margin-right: 10px;
 }
 
 /* Game Over Component css */
@@ -317,9 +317,10 @@
 
 #others {
   background-color: white;
-  height: 200px;
-  width: 400px;
+  height: 150px;
+  width: 600px;
   text-align: center;
+  border-radius: 8px;
 }
 
 #replay-button {
