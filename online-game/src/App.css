@@ -97,6 +97,20 @@
   padding: 8px;
   width: 100%;
 }
+
+#errors {
+  position: absolute;
+  margin-left: 1000px;
+  background-color: lightcoral;
+  border-radius: 8px;
+  
+}
+
+.error-msg {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
 /* Playscreen CSS */
 
 #playscreen {

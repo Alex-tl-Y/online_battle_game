@@ -228,11 +228,17 @@ io.on("connection", (socket) => {
     socket.on("join-game", (username, roomcode, champion) => {
       if (allRooms.has(roomcode)) {
         let room = allRooms.get(roomcode);
-        let user = new User(username, socket.id, false, champion);
-        room.allUsers.push(user);
-        socket.join(roomcode);
-        io.to(socket.id).emit("valid-roomcode");
-
+        if (room.allUsers.some((player) => {
+          return player.champion == champion
+        })) {
+          io.to(socket.id).emit("champ-exists");
+        }
+        else{ 
+          let user = new User(username, socket.id, false, champion);
+          room.allUsers.push(user);
+          socket.join(roomcode);
+          io.to(socket.id).emit("valid-roomcode");
+        }
       }
 
       else {

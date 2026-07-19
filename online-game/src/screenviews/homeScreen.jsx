@@ -10,13 +10,20 @@ function HomeScreen() {
     const [roomCode, setRoomCode] = useState('')
     const [invalidCode, setInvalidCode] = useState('')
     const [champFocused, setChampFocused] = useState(false)
+    const [missingFieldsMsg, setMissingFieldsMsg] = useState('')
     const navigate = useNavigate();
 
     useEffect(() => {
       socket.on("invalid-roomcode", () => {
-        setInvalidCode("Invalid Code");
+        setInvalidCode("Invalid Room Code");
       })
     },[])
+
+    useEffect(() => {
+      socket.on("champ-exists", () => {
+        setInvalidCode("This champion is used in the current lobby. Please pick a different champion.")
+      })
+    }, [])
 
     useEffect(() => {
       socket.on("valid-roomcode", () => {
@@ -28,19 +35,35 @@ function HomeScreen() {
       e.preventDefault();
       console.log("joining");
       
+      // If the user messes up multiple times I want to make sure that it displays the correct message and doesn't keep the old error msg
+      setInvalidCode("");
+      setMissingFieldsMsg("");
+
       if (username != "" && roomCode != "" && championSelected != "") {
         socket.emit("join-game", username, roomCode, championSelected);
       }
 
+      else {
+        setMissingFieldsMsg("Please make sure to enter your champion, username, and/or the room code!")
+      }
     }
 
     function createGame(e) {
       e.preventDefault();
+
+      // If the user messes up multiple times I want to make sure that it displays the correct message and doesn't keep the old error msg
+      setInvalidCode("");
+      setMissingFieldsMsg("");
+
       if (username != "" && championSelected != "") {
         navigate("/play");
         socket.emit("create-game", username, championSelected);
         
         
+      }
+
+      else {
+        setMissingFieldsMsg("Please make sure to enter your champ and/or username")
       }
     
     }
@@ -77,7 +100,12 @@ function HomeScreen() {
               <button id = "joinGameButton" onClick={joinGame}>Join Game</button>
               <button id = "createGame" onClick={createGame}>Create Game</button>
             </form>
-            <p>{invalidCode}</p>
+
+            {(invalidCode.length > 0 || missingFieldsMsg.length > 0) && <div id = "errors">
+              <p className="error-msg">{invalidCode}</p>
+              <p className="error-msg">{missingFieldsMsg}</p>
+            </div>}
+            
           </div>
         </div>
       </>
