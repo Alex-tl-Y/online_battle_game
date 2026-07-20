@@ -1,8 +1,19 @@
   body {
+    background-color: #262829;
   }
 
   #root {
 
+  }
+
+  button {
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  button:not(:disabled):hover {
+    transform: translateY(-1px);
+    filter: brightness(1.1);
   }
 
   /* Homescreen CSS */
@@ -126,15 +137,22 @@
   margin-bottom: 100px;
   align-self: center;
   border-radius: 16px;
+  justify-content: space-between;
 }
 
 #round-number {
+  margin-left: 10px;
   font-size: 36px;
 
 }
 #room-code {
-  margin-left: 500px;
+  margin-left: 300px;
   font-size: 36px;
+}
+
+#timer {
+  width: 64px;
+  height: 64px;
 }
 
 #timer-display {
@@ -156,8 +174,8 @@
   position: relative;
   margin-right: 100px;
   overflow: hidden;
-  width: 400px;
-  height: 400px;
+  width: 560px;
+  height: 560px;
   border: 2px solid;
   justify-content: center;
   align-items: center;
@@ -179,6 +197,7 @@
   position: relative;
   border: 4px solid lightgray;
   border-radius: 4px;
+  
 }
 
 #randomLocationImg {
@@ -204,24 +223,29 @@
   flex-direction: horizontal;
   align-items: center;
 }
-#backButton {
-  margin-top: 10px;
-  margin-left: 830px;
-}
 
 .start-button {
   margin-left: 10px;
   margin-top: 10px;
+  background-color: #16491b;
+  border-radius: 4px;
+  width: 150px;
+  height: 50px;
 }
 
 .start-button:disabled {
   cursor: not-allowed;
 
+
 }
 
 .guess-button {
-  margin-left: 10px;
+  margin-left: 995px;
   margin-top: 10px;
+  background-color: #1F5768;
+  border-radius: 4px;
+  width: 150px;
+  height: 50px;
 }
 
 .guess-button:disabled {
@@ -249,8 +273,8 @@
 #transition_overlay {
   background: rgb(161, 161, 161, 0.5);
   position: absolute;
-  right: 375px;
-  bottom: 300px;
+  right: 190px;
+  bottom: 250px;
   width: 700px;
   height: 400px;
 }
@@ -276,6 +300,7 @@
   border-radius: 4px;
   text-align: center;
   display:flex;
+  justify-content: space-around;
 }
 
 .guessed-scoreboard {
@@ -287,12 +312,23 @@
   border-radius: 4px;
   text-align: center;
   display: flex;
+  text-align: center;
+  display:flex;
+  justify-content: space-around;
 }
 
 .user-icon {
   clip-path: circle(40%);
   width: 50px;
-  margin-right: 10px;
+  
+}
+
+#name-points-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 54px;
+  width: 100px;
 }
 
 /* Game Over Component css */

@@ -18,13 +18,12 @@ function PlayScreen() {
   const [location, setLocation] = useState(null)
   const [score, setScore] = useState(0)
   const [unusedLocations, setUnusedLocations] = useState(locationList)
-  const [round, setRound] = useState(null)
+  const [round, setRound] = useState(1)
   const [timer, setTimer] = useState(null)
   const [roomCode, setRoomCode] = useState(null);
   const [playerList, setPlayerList] = useState([])
   const [roundInformation, setRoundInformation] = useState([])
   const [gameOverInfo, setGameOverInfo] = useState([])
-  const [minimapPos, setMinimapPos] = useState({x: 0, y: 0, zoom: 1})
   const [isHost, setisHost] = useState(false);
   const [inGame, setInGame] = useState(false);
   const [canGuess, setCanGuess] = useState(false);
@@ -32,8 +31,9 @@ function PlayScreen() {
 
   const bounds = [
   [0, 0],
-  [300, 300],
+  [500, 500],
 ];
+
   // Listens for updates to the scoreboard.
   useEffect(() => {
     socket.emit("scoreboard");
@@ -158,9 +158,9 @@ function PlayScreen() {
     })
   }, [])
 
-  function goBack() {
-    navigate("/");
-  }
+  // function goBack() {
+  //   navigate("/");
+  // }
 
   // Handles the clicks on the minimap
   function handleMinimapClick(e) {
@@ -261,7 +261,7 @@ function PlayScreen() {
         <>
           <div id = "playscreen">
             <div id = "game-information">
-              <p id = "round-number">Round {round}</p>
+              <p id = "round-number">Round {round} of 10</p>
               <p id = "room-code">Room Code: {roomCode}</p>
               <p id = "timer-display">{timer}</p>
             </div>
@@ -274,11 +274,12 @@ function PlayScreen() {
               <div id = "minimap">
 
 
-                <MapContainer center={[150,150]} zoom={-1} scrollWheelZoom={true} style={{height: "300px", width: "300px"}} attributionControl={false} crs={L.CRS.Simple}>
+                <MapContainer center={[150,150]} zoom={-1} scrollWheelZoom={true} style={{height: "500px", width: "500px", background: "transparent"}} attributionControl={false} crs={L.CRS.Simple} maxBounds={bounds} maxBoundsViscosity={0.4}>
                   <ImageOverlay
                     
                     url={minimap}
                     bounds={bounds}
+                    
                   />
                   <MinimapClick/>
                   <RoundOverAnimation/>
@@ -325,11 +326,7 @@ function PlayScreen() {
               <div id = "randomLocation">
                 {location && <img  id = "randomLocationImg" src = {location.imgsrc}/>}
               </div>
-              
-              <div id = "score">
-                {score && <p>Score: {score}</p>}
-              </div>
-              
+                            
               <div id = "transition-overlay">
                 {(roundInformation.length > 0) && <TransitionPage scoreFromRoundList = {roundInformation}/>}
               </div>
@@ -341,8 +338,6 @@ function PlayScreen() {
             </div>
           </div>
           <div id = "playButton">
-            <button id = "backButton" onClick={goBack}>Back</button>
-            <p id = "test">{minimapPos.zoom}</p>
             <button disabled = {!canGuess || !circle} className="guess-button" onClick = {calculateDistance}>Guess</button>
             {!inGame && <button disabled = {!isHost} className = "start-button" onClick = {randomLocation}>Start Game!</button>}
           </div>
