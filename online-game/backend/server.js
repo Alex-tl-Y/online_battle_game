@@ -5,7 +5,7 @@ import {locationList} from "../src/location_info/locationList"
 
 class User {
     score = 0;
-    position = 0;
+    position = 1;
     score_from_round = 0;
     coords_from_round = null;
     
@@ -312,6 +312,9 @@ function roundTransition(room) {
   let roundInformation = [...room.allUsers];
   sortScoreFromRound(roundInformation);
   io.to(room.code).emit("round-transition", roundInformation, {x: room.currentLocation.x, y: room.currentLocation.y});
+
+  sortScore(room.allUsers);
+  updatePosition(room.allUsers);
   io.to(room.code).emit("set-scoreboard", room.allUsers);
   io.to(room.code).emit("cannot-guess");
 
@@ -320,9 +323,7 @@ function roundTransition(room) {
     if (sec < 0) {
       clearInterval(timer);
       if (room.round > 3) {
-        let gameOverInformation = [...room.allUsers];
-        sortScore(gameOverInformation);
-        io.to(room.code).emit("game-over", gameOverInformation);
+        io.to(room.code).emit("game-over", room.allUsers);
         room.inGame = false;
         io.to(room).emit("not-ingame");
       }
@@ -395,12 +396,28 @@ function hardResetUserRoomInfo(room) {
 }
 
 function sortScore(userList) {
-  userList.sort((a,b) => a.score - b.score);
+  userList.sort((a,b) => b.score - a.score);
+  console.log(userList);
 }
 
 function sortScoreFromRound(userList) {
-  userList.sort((a,b) => a.score_from_round - b.score_from_round);
+  userList.sort((a,b) => b.score_from_round - a.score_from_round);
   
+}
+
+// This function assumes that the input userList is sorted.
+// Function updates the position of each user. 
+function updatePosition(userList) {
+  let userPosition = 1;
+  for (let i = 0; i < userList.length - 1; i ++) {
+    userList[i].position = userPosition;
+    // Checks to see if the values are different. If they are, we know that there are no ties
+    if (userList[i] != userList[i + 1]) {
+      userPosition += 1;
+    }
+  }
+  // For loop doesn't check last case, so manually set the position for the last case here.
+  userList.at(-1).position = userPosition;
 }
 
 function generateRoomCode() {
