@@ -289,6 +289,7 @@ io.on("connection", (socket) => {
       let roomInfo = findUserRoom(socket.id, allRooms);
       hardResetUserRoomInfo(roomInfo[1]);
       io.to(roomInfo[0]).emit("disable-gameover-overlay");
+      io.to(roomInfo[0]).emit("set-scoreboard", roomInfo[1].allUsers);
       startGame(roomInfo[1]);
 
     })
@@ -347,6 +348,9 @@ function roundStart(room) {
   io.to(room.code).emit("display-location", room.currentLocation);
   io.to(room.code).emit("round-number", room.round);
 
+  // Remove location from unused locations to prevent duplicates in the same game
+  room.unusedLocations.splice(randomNumber, 1);
+  
   let timer = setInterval(() => {
     io.to(room.code).emit("timer-information", sec);
     sec--;
@@ -384,6 +388,7 @@ function hardResetUserRoomInfo(room) {
   for (const user of room.allUsers) {
     user.score = 0;
     user.score_from_round = 0;
+    user.position = 1;
     user.coords_from_round = null;
   }
   

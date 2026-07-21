@@ -1,11 +1,181 @@
 export const locationList = [{
-    x: 29,
-    y: 37,
+    x: 53,
+    y: 436,
     imgsrc: "/locationimages/location1.png"
 },
 {
-    x: 196, 
-    y: 138,
+    x: 330, 
+    y: 266,
     imgsrc: "/locationimages/location2.png"
-}
+},
+{
+    x: 265,
+    y: 305,
+    imgsrc: "/locationimages/location3.png",
+},
+{
+    x: 349,
+    y: 105,
+    imgsrc: "/locationimages/location4.png",
+},
+{
+    x: 129,
+    y: 265,
+    imgsrc: "/locationimages/location5.png",
+},
+{
+    x: 414,
+    y: 270,
+    imgsrc: "/locationimages/location6.png",
+},
+{
+    x: 218,
+    y: 414,
+    imgsrc: "/locationimages/location7.png",
+},
+{
+    x: 101,
+    y: 387,
+    imgsrc: "/locationimages/location8.png",
+},
+{
+    x: 259,
+    y: 30,
+    imgsrc: "/locationimages/location9.png",
+},
+{
+    x: 372,
+    y: 232,
+    imgsrc: "/locationimages/location10.png",
+},
+{
+    x: 206,
+    y: 115,
+    imgsrc: "/locationimages/location11.png",
+},
+{
+    x: 361,
+    y: 422,
+    imgsrc: "/locationimages/location12.png",
+},
+{
+    x: 420,
+    y: 363,
+    imgsrc: "/locationimages/location13.png",
+},
+{
+    x: 79,
+    y: 136,
+    imgsrc: "/locationimages/location14.png",
+},
+{
+    x: 134,
+    y: 84,
+    imgsrc: "/locationimages/location15.png",
+},
+{
+    x: 373,
+    y: 189,
+    imgsrc: "/locationimages/location16.png",
+},
+{
+    x: 137,
+    y: 300,
+    imgsrc: "/locationimages/location17.png",
+},
+{
+    x: 334,
+    y: 146,
+    imgsrc: "/locationimages/location18.png",
+},
+{
+    x: 166,
+    y: 351,
+    imgsrc: "/locationimages/location19.png",
+},
+{
+    x: 65,
+    y: 269,
+    imgsrc: "/locationimages/location20.png",
+},
+{
+    x: 420,
+    y: 156,
+    imgsrc: "/locationimages/location21.png",
+},
+{
+    x: 181,
+    y: 146,
+    imgsrc: "/locationimages/location22.png",
+},
+{
+    x: 291,
+    y: 243,
+    imgsrc: "/locationimages/location23.png",
+},
+{
+    x: 303,
+    y: 403,
+    imgsrc: "/locationimages/location24.png",
+},
+{
+    x: 177,
+    y: 245,
+    imgsrc: "/locationimages/location25.png",
+},
+{
+    x: 470,
+    y: 237,
+    imgsrc: "/locationimages/location26.png",
+},
+{
+    x: 90,
+    y: 204,
+    imgsrc: "/locationimages/location27.png",
+},
+{
+    x: 174,
+    y: 440,
+    imgsrc: "/locationimages/location28.png",
+},
+{
+    x: 61,
+    y: 65,
+    imgsrc: "/locationimages/location29.png",
+},
+{
+    x: 432,
+    y: 428,
+    imgsrc: "/locationimages/location30.png",
+},
+{
+    x: 473,
+    y: 497,
+    imgsrc: "/locationimages/location31.png",
+},
+{
+    x: 8,
+    y: 28,
+    imgsrc: "/locationimages/location32.png",
+},
+{
+    x: 235,
+    y: 179,
+    imgsrc: "/locationimages/location33.png",
+},
+{
+    x: 443,
+    y: 65,
+    imgsrc: "/locationimages/location34.png",
+},
+{
+    x: 201,
+    y: 104,
+    imgsrc: "/locationimages/location35.png",
+},
+{
+    x: 427,
+    y: 304,
+    imgsrc: "/locationimages/location36.png",
+},
 ];

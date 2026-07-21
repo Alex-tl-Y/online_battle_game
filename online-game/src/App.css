@@ -136,27 +136,41 @@
   background-color: lightblue;
   margin-bottom: 100px;
   align-self: center;
+  align-items: center;
   border-radius: 16px;
-  justify-content: space-between;
+  justify-content: space-around;
 }
 
 #round-number {
-  margin-left: 10px;
+  
   font-size: 36px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
 }
 #room-code {
-  margin-left: 300px;
+ 
   font-size: 36px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
 }
 
-#timer {
+#circle-timer {
   width: 64px;
   height: 64px;
+  border-radius: 50%;
+  border-color: black;
+  background-color: gray;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
 }
 
 #timer-display {
-  margin-left: 400px;
   font-size: 36px;
 }
 
@@ -205,6 +219,8 @@
 
   width: 748px;
   height:560px;
+  object-fit: cover;
+  object-position: center;
 
 }
 
@@ -340,6 +356,7 @@
   align-items: center;
   display:flex;
   flex-direction: column;
+  z-index: 1001;
 }
 
 #podium {

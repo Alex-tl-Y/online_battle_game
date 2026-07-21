@@ -137,6 +137,7 @@ function PlayScreen() {
   useEffect(() => {
     socket.on("can-guess", () => {
       setCanGuess(true);
+      setCircle(null);
     })
 
     socket.on("cannot-guess", () => {
@@ -261,9 +262,11 @@ function PlayScreen() {
         <>
           <div id = "playscreen">
             <div id = "game-information">
-              <p id = "round-number">Round {round} of 10</p>
-              <p id = "room-code">Room Code: {roomCode}</p>
-              <p id = "timer-display">{timer}</p>
+              <div id = "round-number">Round {round} of 10</div>
+              <div id = "room-code">Room Code: {roomCode}</div>
+              <div id = "circle-timer">
+                <p id = "timer-display">{timer}</p>
+              </div>
             </div>
 
             <div id = "bottom-half">
